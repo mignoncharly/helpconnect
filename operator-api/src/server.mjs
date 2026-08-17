@@ -1,7 +1,7 @@
-import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
-import { createSecurityService, clearSessionCookie, SecurityError, sessionCookie, validateAuditJournal, validateRevocationJournal } from "./security-core.mjs";
+import { createSecurityService, clearSessionCookie, SecurityError, sessionCookie } from "./security-core.mjs";
+import { openOperatorStore } from "./store.mjs";
 import { createWebAuthnAdapter } from "./webauthn-adapter.mjs";
 import { validateOperatorBoundaryConfiguration } from "./config-validation.mjs";
 import { validatePrivateRecord } from "../../scripts/publication-workflow.mjs";
@@ -12,39 +12,76 @@ const boundary = validateOperatorBoundaryConfiguration({
   rpId: requiredEnvironment("HC_WEBAUTHN_RP_ID")
 });
 const { expectedOrigin, rpId } = boundary;
-const operatorConfigPath = requiredEnvironment("HC_OPERATOR_CONFIG");
-const recordPath = requiredEnvironment("HC_RECORDS_PATH");
-const auditPath = requiredEnvironment("HC_AUDIT_PATH");
-const revocationPath = requiredEnvironment("HC_REVOCATION_PATH");
+const storePath = requiredEnvironment("HC_STORE_PATH");
 const port = Number.parseInt(process.env.HC_OPERATOR_PORT ?? "8443", 10);
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error("Invalid private API configuration");
 
-const operatorConfig = JSON.parse(readFileSync(operatorConfigPath, "utf8"));
-const recordBundle = JSON.parse(readFileSync(recordPath, "utf8"));
-if (!Array.isArray(operatorConfig.operators) || !Array.isArray(recordBundle.records)) throw new Error("Invalid operator or record configuration");
-applyPersistedRevocations(operatorConfig.operators, validateRevocationJournal(readJsonLines(revocationPath)));
+// ADR-013 : l'ouverture du store revalide integralement le journal d'audit,
+// pas seulement son dernier evenement. Une chaine rompue empeche le demarrage.
+const store = openOperatorStore({ databasePath: storePath });
+store.verifyIntegrity();
+
+const operators = store.readOperators();
+applyPersistedRevocations(operators, store.readRevocations());
 const recordIds = new Set();
-const records = new Map(recordBundle.records.map((record) => {
+const records = new Map(store.readRecords().map((record) => {
   validatePrivateRecord(record);
   if (recordIds.has(record.id)) throw new Error("Duplicate private record id");
   recordIds.add(record.id);
   return [record.id, structuredClone(record)];
 }));
 const authenticator = createWebAuthnAdapter({ rpId, expectedOrigin });
-const auditJournal = validateAuditJournal(readJsonLines(auditPath));
-const previousAuditEvent = auditJournal.at(-1);
+const auditHead = store.auditHead();
+
+// Une operation de securite peut emettre une revocation ET son evenement
+// d'audit. Les deux sinks sont appeles separement par le service, donc on les
+// tamponne et on les ecrit dans UNE transaction : sans cela, un arret entre les
+// deux laisserait une revocation sans trace d'audit.
+let pendingEvents = null;
+
+function collectPersistentEvent(kind, event) {
+  if (pendingEvents === null) throw new Error("Persistent event emitted outside a unit of work");
+  pendingEvents.push({ event, kind });
+}
+
+function flushPendingEvents(buffered) {
+  if (buffered.length === 0) return;
+  store.transaction((tx) => {
+    for (const item of buffered) {
+      if (item.kind === "AUDIT") tx.appendAudit(item.event);
+      else if (item.kind === "RECORD") tx.putRecord(item.event);
+      else tx.appendRevocation(item.event);
+    }
+  });
+}
+
+async function unitOfWork(work) {
+  if (pendingEvents !== null) throw new Error("Nested units of work are not supported");
+  pendingEvents = [];
+  let outcome;
+  try {
+    outcome = { value: await work() };
+  } catch (error) {
+    outcome = { error };
+  }
+  const buffered = pendingEvents;
+  pendingEvents = null;
+  // Les refus produisent eux aussi des evenements d'audit : ils doivent etre
+  // ecrits meme quand l'operation echoue.
+  flushPendingEvents(buffered);
+  if (outcome.error) throw outcome.error;
+  return outcome.value;
+}
 const security = createSecurityService({
   authenticator,
   expectedOrigin,
-  operators: operatorConfig.operators,
-  auditSeed: previousAuditEvent && Number.isSafeInteger(previousAuditEvent.sequence) && typeof previousAuditEvent.hash === "string"
-    ? { sequence: previousAuditEvent.sequence, hash: previousAuditEvent.hash }
-    : undefined,
+  operators,
+  auditSeed: auditHead.sequence > 0 ? auditHead : undefined,
   auditSink(event) {
-    appendFileSync(auditPath, `${JSON.stringify(event)}\n`, { encoding: "utf8", mode: 0o600 });
+    collectPersistentEvent("AUDIT", event);
   },
   revocationSink(event) {
-    appendFileSync(revocationPath, `${JSON.stringify(event)}\n`, { encoding: "utf8", mode: 0o600 });
+    collectPersistentEvent("REVOCATION", event);
   }
 });
 
@@ -52,68 +89,73 @@ const server = createServer(async (request, response) => {
   const requestId = randomBytes(12).toString("base64url");
   setSecurityHeaders(response, requestId);
   try {
-    const requestTarget = request.url ?? "/";
-    if (!requestTarget.startsWith("/") || requestTarget.startsWith("//")) throw new SecurityError(400, "INVALID_REQUEST_TARGET");
-    const url = new URL(requestTarget, expectedOrigin);
-    if (url.origin !== expectedOrigin || url.search || url.hash) throw new SecurityError(400, "INVALID_REQUEST_TARGET");
-    const method = request.method ?? "GET";
-    const token = readCookie(request.headers.cookie, "__Host-hc_operator");
-    const csrfToken = singleHeader(request.headers["x-csrf-token"]);
-    const origin = singleHeader(request.headers.origin);
+    // Toute la requete est une unite de travail : les evenements persistants
+    // qu'elle emet sont ecrits ensemble, dans une seule transaction.
+    await unitOfWork(async () => {
+      const requestTarget = request.url ?? "/";
+      if (!requestTarget.startsWith("/") || requestTarget.startsWith("//")) throw new SecurityError(400, "INVALID_REQUEST_TARGET");
+      const url = new URL(requestTarget, expectedOrigin);
+      if (url.origin !== expectedOrigin || url.search || url.hash) throw new SecurityError(400, "INVALID_REQUEST_TARGET");
+      const method = request.method ?? "GET";
+      const token = readCookie(request.headers.cookie, "__Host-hc_operator");
+      const csrfToken = singleHeader(request.headers["x-csrf-token"]);
+      const origin = singleHeader(request.headers.origin);
 
-    if (method === "POST" && origin !== expectedOrigin) throw new SecurityError(403, "REQUEST_FORBIDDEN");
+      if (method === "POST" && origin !== expectedOrigin) throw new SecurityError(403, "REQUEST_FORBIDDEN");
 
-    if (method === "POST" && url.pathname === "/v1/auth/options") {
-      const body = await jsonBody(request);
-      requireExactBody(body, []);
-      const result = await security.beginAuthentication({ ip: rateLimitIdentity(request), requestId });
-      return sendJson(response, 200, result);
-    }
-    if (method === "POST" && url.pathname === "/v1/auth/verify") {
-      const body = await jsonBody(request);
-      requireExactBody(body, ["flow_id", "response"]);
-      const result = await security.completeAuthentication({ flowId: body.flow_id, response: body.response, ip: rateLimitIdentity(request), requestId });
-      response.setHeader("Set-Cookie", sessionCookie(result.session_token));
-      return sendJson(response, 200, { csrf_token: result.csrf_token, expires_at: result.expires_at, operator: result.operator });
-    }
-    if (method === "GET" && url.pathname === "/v1/session") {
-      return sendJson(response, 200, security.sessionView(token));
-    }
-    if (method === "GET" && url.pathname === "/v1/records") {
-      return sendJson(response, 200, { records: security.readableRecords({ token, records: [...records.values()], requestId }) });
-    }
-    if (method === "POST" && url.pathname === "/v1/logout") {
-      const body = await jsonBody(request);
-      requireExactBody(body, []);
-      security.logout({ token, csrfToken, origin, requestId });
-      response.setHeader("Set-Cookie", clearSessionCookie());
-      return sendJson(response, 204, undefined);
-    }
-    const transitionMatch = url.pathname.match(/^\/v1\/records\/([a-z0-9-]{1,60})\/transition$/);
-    if (method === "POST" && transitionMatch) {
-      const record = records.get(transitionMatch[1]);
-      if (!record) throw new SecurityError(404, "RECORD_NOT_FOUND");
-      const body = await jsonBody(request);
-      requireExactBody(body, ["context", "event"]);
-      const next = security.mutateRecord({ token, csrfToken, origin, record, event: body.event, context: body.context, requestId });
-      records.set(next.id, next);
-      return sendJson(response, 200, { record: next });
-    }
-    const revokeMatch = url.pathname.match(/^\/v1\/operators\/([a-z0-9-]{1,80})\/revoke$/);
-    if (method === "POST" && revokeMatch) {
-      const body = await jsonBody(request);
-      requireExactBody(body, []);
-      security.revokeOperator({ token, csrfToken, origin, targetOperatorId: revokeMatch[1], requestId });
-      return sendJson(response, 204, undefined);
-    }
-    const credentialRevokeMatch = url.pathname.match(/^\/v1\/credentials\/([A-Za-z0-9_-]{1,1024})\/revoke$/);
-    if (method === "POST" && credentialRevokeMatch) {
-      const body = await jsonBody(request);
-      requireExactBody(body, []);
-      security.revokeCredential({ token, csrfToken, origin, credentialId: credentialRevokeMatch[1], requestId });
-      return sendJson(response, 204, undefined);
-    }
-    throw new SecurityError(404, "NOT_FOUND");
+      if (method === "POST" && url.pathname === "/v1/auth/options") {
+        const body = await jsonBody(request);
+        requireExactBody(body, []);
+        const result = await security.beginAuthentication({ ip: rateLimitIdentity(request), requestId });
+        return sendJson(response, 200, result);
+      }
+      if (method === "POST" && url.pathname === "/v1/auth/verify") {
+        const body = await jsonBody(request);
+        requireExactBody(body, ["flow_id", "response"]);
+        const result = await security.completeAuthentication({ flowId: body.flow_id, response: body.response, ip: rateLimitIdentity(request), requestId });
+        response.setHeader("Set-Cookie", sessionCookie(result.session_token));
+        return sendJson(response, 200, { csrf_token: result.csrf_token, expires_at: result.expires_at, operator: result.operator });
+      }
+      if (method === "GET" && url.pathname === "/v1/session") {
+        return sendJson(response, 200, security.sessionView(token));
+      }
+      if (method === "GET" && url.pathname === "/v1/records") {
+        return sendJson(response, 200, { records: security.readableRecords({ token, records: [...records.values()], requestId }) });
+      }
+      if (method === "POST" && url.pathname === "/v1/logout") {
+        const body = await jsonBody(request);
+        requireExactBody(body, []);
+        security.logout({ token, csrfToken, origin, requestId });
+        response.setHeader("Set-Cookie", clearSessionCookie());
+        return sendJson(response, 204, undefined);
+      }
+      const transitionMatch = url.pathname.match(/^\/v1\/records\/([a-z0-9-]{1,60})\/transition$/);
+      if (method === "POST" && transitionMatch) {
+        const record = records.get(transitionMatch[1]);
+        if (!record) throw new SecurityError(404, "RECORD_NOT_FOUND");
+        const body = await jsonBody(request);
+        requireExactBody(body, ["context", "event"]);
+        const next = security.mutateRecord({ token, csrfToken, origin, record, event: body.event, context: body.context, requestId });
+        records.set(next.id, next);
+        collectPersistentEvent("RECORD", next);
+        return sendJson(response, 200, { record: next });
+      }
+      const revokeMatch = url.pathname.match(/^\/v1\/operators\/([a-z0-9-]{1,80})\/revoke$/);
+      if (method === "POST" && revokeMatch) {
+        const body = await jsonBody(request);
+        requireExactBody(body, []);
+        security.revokeOperator({ token, csrfToken, origin, targetOperatorId: revokeMatch[1], requestId });
+        return sendJson(response, 204, undefined);
+      }
+      const credentialRevokeMatch = url.pathname.match(/^\/v1\/credentials\/([A-Za-z0-9_-]{1,1024})\/revoke$/);
+      if (method === "POST" && credentialRevokeMatch) {
+        const body = await jsonBody(request);
+        requireExactBody(body, []);
+        security.revokeCredential({ token, csrfToken, origin, credentialId: credentialRevokeMatch[1], requestId });
+        return sendJson(response, 204, undefined);
+      }
+      throw new SecurityError(404, "NOT_FOUND");
+    });
   } catch (error) {
     const status = error instanceof SecurityError ? error.status : 500;
     const code = error instanceof SecurityError ? error.code : "INTERNAL_ERROR";
@@ -135,13 +177,6 @@ function requiredEnvironment(name) {
   const value = process.env[name];
   if (!value) throw new Error(`Missing ${name}`);
   return value;
-}
-
-function readJsonLines(filePath) {
-  if (!existsSync(filePath)) return [];
-  const content = readFileSync(filePath, "utf8");
-  if (content.length > 20 * 1024 * 1024) throw new Error(`Oversized private journal: ${filePath}`);
-  return content.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
 }
 
 function applyPersistedRevocations(operators, revocations) {

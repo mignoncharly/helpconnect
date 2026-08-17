@@ -48,7 +48,7 @@ function clone(value) {
   return structuredClone(value);
 }
 
-function validateOperators(input) {
+export function validateOperators(input) {
   if (!Array.isArray(input) || input.length < 1 || input.length > 1_000) throw new Error("Invalid operator registry");
   const operatorIds = new Set();
   const credentialIds = new Set();
@@ -121,7 +121,7 @@ export function createSecurityService(configuration) {
       reason: event.reason ?? null,
       previous_hash: previousAuditHash
     };
-    const next = { ...base, hash: hash(JSON.stringify(base)) };
+    const next = { ...base, hash: auditEventHash(base) };
     previousAuditHash = next.hash;
     auditEvents.push(next);
     configuration.auditSink?.(clone(next));
@@ -334,6 +334,20 @@ export function clearSessionCookie() {
   return "__Host-hc_operator=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict";
 }
 
+export function auditEventHash(event) {
+  return hash(JSON.stringify({
+    sequence: event.sequence,
+    at: event.at,
+    request_id: event.request_id,
+    actor_id: event.actor_id,
+    action: event.action,
+    outcome: event.outcome,
+    target: event.target,
+    reason: event.reason,
+    previous_hash: event.previous_hash
+  }));
+}
+
 export function validateAuditJournal(events) {
   if (!Array.isArray(events) || events.length > 1_000_000) throw new Error("Invalid audit journal");
   let expectedSequence = 1;
@@ -345,18 +359,7 @@ export function validateAuditJournal(events) {
     boundedText(event.request_id, 100, "request id");
     boundedText(event.action, 80, "audit action");
     for (const field of ["actor_id", "target", "reason"]) if (event[field] !== null && (typeof event[field] !== "string" || event[field].length > 200)) throw new Error("Invalid audit event field");
-    const base = {
-      sequence: event.sequence,
-      at: event.at,
-      request_id: event.request_id,
-      actor_id: event.actor_id,
-      action: event.action,
-      outcome: event.outcome,
-      target: event.target,
-      reason: event.reason,
-      previous_hash: event.previous_hash
-    };
-    if (event.hash !== hash(JSON.stringify(base))) throw new Error("Invalid audit event hash");
+    if (event.hash !== auditEventHash(event)) throw new Error("Invalid audit event hash");
     previousHash = event.hash;
     expectedSequence += 1;
   }

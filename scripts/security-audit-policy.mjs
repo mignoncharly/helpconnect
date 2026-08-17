@@ -30,7 +30,11 @@ export function validateSecurityAuditPolicy({ workflow, packageJson, lockfile, s
   const requiredSourceFragments = [
     ["canonical operator origin", sources.operatorConfig, /origin\.origin !== value/],
     ["exact WebAuthn RP binding", sources.operatorConfig, /rpId !== origin\.hostname/],
-    ["startup audit verification", sources.operatorServer, /validateAuditJournal\(readJsonLines\(auditPath\)\)/],
+    ["startup store integrity verification", sources.operatorServer, /store\.verifyIntegrity\(\)/],
+    ["single persistence entry point", sources.operatorServer, /openOperatorStore\(/],
+    ["full audit journal revalidation", sources.operatorStore, /validateAuditJournal\(events\)/],
+    ["audit chain verified before write", sources.operatorStore, /Broken audit journal chain/],
+    ["append-only audit journal", sources.operatorStore, /audit journal is append-only/],
     ["proxy rate partition", sources.operatorServer, /headers\["x-hc-rate-key"\]/],
     ["JSON body cap", sources.operatorServer, /64 \* 1024/],
     ["loopback binding", sources.operatorServer, /server\.listen\(port, "127\.0\.0\.1"/],

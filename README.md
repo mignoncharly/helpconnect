@@ -22,6 +22,9 @@ npm run deployment:check -- path/to/deployment-dossier.json
 npm run security:check-deployment -- https://help-connect.example/
 npm run security:check-operator-deployment -- https://operators.help-connect.example/
 npm run privacy:check-deployment -- path/to/privacy-evidence.json
+npm run store:migrate -- --source-dir path/to/data --database path/to/operator-store.db
+npm run store:backup -- --database path/to/operator-store.db --output path/to/backup.db
+npm run store:restore-proof -- --backup path/to/backup.db --into path/to/isolated
 ```
 
 `npm run validate` exécute le lint des règles de sécurité sur les deux applications, le module d’intégrité partagé et l’API, les trois configurations TypeScript strictes, la vérification syntaxique de l’API, les tests unitaires/intégration, la validation de toutes les signatures, les builds séparés, les deux inventaires et les budgets Brotli. Le build échoue dès qu'un seuil est dépassé.
@@ -39,6 +42,10 @@ npm run privacy:check-deployment -- path/to/privacy-evidence.json
 `npm run pilot:check -- …` contrôle le dossier d’admission Phase 18 : décision Phase 17 `GO`, six preuves externes fraîches liées par hash, périmètre d’une région/20–50 points, revues humaines, exercices de retrait et mesures agrégées sans tracking. Le [rapport de Phase 18](./docs/phase-18/README.md) documente le protocole ; l’exemple fourni est volontairement `NO_GO`.
 
 `npm run release:hash` lie les octets exacts des deux distributions par une empreinte d’arbre déterministe. `npm run deployment:check -- …` recalcule ces empreintes et bloque la production sans pilote `GO`, origins distinctes, preuves live, sauvegarde, rollback et frontière publique `GET`/`HEAD`. Voir le [runbook de Phase 19](./docs/phase-19/README.md).
+
+`npm run store:migrate -- …` migre les quatre anciens fichiers plats vers le store transactionnel décrit par [l'ADR-013](./docs/phase-19/adr-013-operator-store.md). La commande est **dry-run par défaut** : elle lit, valide, hashe chaque source et n'écrit qu'avec `--commit`, après avoir sauvegardé les originaux. `--rollback` restaure l'état antérieur et écarte la base sans la détruire.
+
+`npm run store:backup -- …` prend une copie cohérente en ligne, sans arrêter le service, puis **rouvre la copie et la revalide** : une sauvegarde non vérifiée ne prouve rien. `npm run store:restore-proof -- …` restaure dans une base isolée, revalide toute la chaîne d'audit et compare le hash de tête au hash attendu.
 
 `npm run security:check-deployment -- https://…/` contrôle sur l’origin publiée les en-têtes canoniques, l’absence de cookie, TLS 1.2/1.3, `GET`/`HEAD`, le rejet des méthodes de mutation et la redirection HTTP permanente vers HTTPS. Le fichier `dist/_headers` est directement utilisable seulement par les hébergeurs compatibles ; ailleurs, sa politique doit être transcrite dans la configuration du serveur ou du CDN.
 
@@ -69,6 +76,7 @@ Le seul dossier public à déployer est `dist/`. `operator-portal/dist/` apparti
 - [Rapport de Phase 17](./docs/phase-17/README.md)
 - [Préparation et gate d’admission de Phase 18](./docs/phase-18/README.md)
 - [Préparation et gate de déploiement de Phase 19](./docs/phase-19/README.md)
+- [ADR-013 — Store transactionnel du système opérateur](./docs/phase-19/adr-013-operator-store.md)
 
 ## Budgets bloquants
 

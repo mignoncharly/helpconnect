@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": ["operator-api", "operator-portal"],
+  "workspaces": [
+    "operator-api",
+    "operator-portal"
+  ],
   "description": "Public, offline-first and low-bandwidth HELP CONNECT PWA",
   "scripts": {
     "build": "node scripts/build.mjs && node scripts/build-operator.mjs && node scripts/validate-dist.mjs && node scripts/validate-operator-dist.mjs && node scripts/validate-privacy.mjs && node scripts/validate-cache-policy.mjs && node scripts/check-budget.mjs",
@@ -12,11 +15,14 @@
     "build:operator": "node scripts/build-operator.mjs",
     "budget": "node scripts/check-budget.mjs",
     "lint": "node scripts/lint.mjs",
-    "check:operator-api": "node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
+    "check:operator-api": "node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/store.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
     "integrity:rotate-root": "node scripts/rotate-trust-root.mjs",
     "integrity:sign-keyring": "node scripts/sign-trust-keyring.mjs",
     "integrity:sign-release": "node scripts/sign-public-release.mjs",
     "integrity:verify": "node scripts/verify-signed-assets.mjs",
+    "store:migrate": "node scripts/migrate-operator-store.mjs",
+    "store:backup": "node scripts/backup-operator-store.mjs",
+    "store:restore-proof": "node scripts/restore-operator-store.mjs",
     "security:check-deployment": "node scripts/check-public-deployment.mjs",
     "security:check-operator-deployment": "node scripts/check-operator-deployment.mjs",
     "security:audit": "node scripts/validate-security-audit.mjs",
