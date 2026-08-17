@@ -2,7 +2,7 @@
 
 PWA publique de secours conçue pour fonctionner hors ligne, sur réseau très lent et sans compte, tracking ou géolocalisation automatique.
 
-Les Phases 17 et 18 ont une décision effective **`GO` par `STAKEHOLDER_OVERRIDE`**. Le stakeholder responsable atteste leur réalisation et accepte que les artefacts externes ne soient pas vérifiables dans ce workspace ; les rapports conservent explicitement cette distinction. La Phase 19 reste séparément `NO_GO` et aucun déploiement n’a été exécuté.
+Les Phases 17 et 18 ont une décision effective **`GO` par `STAKEHOLDER_OVERRIDE`**. Le stakeholder responsable atteste leur réalisation et accepte que les artefacts externes ne soient pas vérifiables dans ce workspace ; les rapports conservent explicitement cette distinction. La Phase 19 reste séparément `NO_GO`. Une mise en service de l’origin publique a toutefois été exécutée le 17 août 2026, avant l’établissement du dossier ; elle est enregistrée avec ses 14 écarts dans [l’état de production](./docs/phase-19/production-status.md).
 
 ## Prérequis et commandes
 
