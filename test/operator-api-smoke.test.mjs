@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { openOperatorStore } from "../operator-api/src/store.mjs";
 
 async function availablePort() {
   return new Promise((resolve, reject) => {
@@ -22,16 +23,26 @@ test("the private HTTP boundary enforces origin, no-store and authentication", a
   const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "help-connect-operator-api-"));
   const port = await availablePort();
   const origin = "https://operators.helpconnect.test";
+
+  // L'API ne lit plus de fichiers plats : on seme le store depuis les memes
+  // fixtures, par l'API transactionnelle, seul chemin d'ecriture autorise.
+  const storePath = path.join(temporaryRoot, "store.db");
+  const operators = JSON.parse(await readFile(path.resolve("operator-api/config/operators.example.json"), "utf8")).operators;
+  const records = JSON.parse(await readFile(path.resolve("operator-portal/data/demo-records.json"), "utf8")).records;
+  const seed = openOperatorStore({ databasePath: storePath });
+  seed.transaction((tx) => {
+    for (const operator of operators) tx.putOperator(operator);
+    for (const record of records) tx.putRecord(record);
+  });
+  seed.close();
+
   const child = spawn(process.execPath, ["operator-api/src/server.mjs"], {
     cwd: new URL("..", import.meta.url),
     env: {
       ...process.env,
       HC_OPERATOR_ORIGIN: origin,
       HC_WEBAUTHN_RP_ID: "operators.helpconnect.test",
-      HC_OPERATOR_CONFIG: path.resolve("operator-api/config/operators.example.json"),
-      HC_RECORDS_PATH: path.resolve("operator-portal/data/demo-records.json"),
-      HC_AUDIT_PATH: path.join(temporaryRoot, "audit.jsonl"),
-      HC_REVOCATION_PATH: path.join(temporaryRoot, "revocations.jsonl"),
+      HC_STORE_PATH: storePath,
       HC_OPERATOR_PORT: String(port)
     },
     stdio: ["ignore", "pipe", "pipe"]
