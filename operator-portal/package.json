@@ -1,0 +1,14 @@
+{
+  "name": "help-connect-operator-portal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated WebAuthn operator portal for HELP CONNECT",
+  "dependencies": {
+    "@simplewebauthn/browser": "13.3.0"
+  },
+  "scripts": {
+    "build": "node ../scripts/build-operator.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "decision_when_evidence_missing": "NO_GO",
+  "required_external_evidence": [
+    {
+      "id": "phase-16-physical-android",
+      "description": "Critical scenario passed on a physical entry-level Android device, including high-brightness review"
+    },
+    {
+      "id": "independent-penetration-test",
+      "description": "Independent frontend, API and operator authorization penetration test with critical/high findings closed"
+    },
+    {
+      "id": "public-live-deployment",
+      "description": "Public HTTPS, DNS, CDN headers, redirect and privacy evidence validated on the final origin"
+    },
+    {
+      "id": "operator-live-deployment",
+      "description": "Private origin, TLS proxy, injected rate key, WebAuthn ceremony and admin access controls validated"
+    },
+    {
+      "id": "transactional-storage-and-restore",
+      "description": "Reference in-memory/file stores replaced and a protected backup restore exercise passed"
+    },
+    {
+      "id": "secrets-and-administrator-review",
+      "description": "Production secrets, signing keys, DNS/CDN accounts and administrator access independently reviewed"
+    }
+  ]
+}

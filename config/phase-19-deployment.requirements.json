@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "prerequisite_pilot_decision": "GO",
+  "dossier_max_age_days": 7,
+  "evidence_max_age_days": 90,
+  "required_evidence": [
+    "phase-18-pilot-outcome",
+    "final-build-and-signatures",
+    "public-live-security",
+    "public-live-privacy",
+    "operator-live-security",
+    "transactional-restore",
+    "secrets-and-admin-access",
+    "dns-and-cdn-configuration",
+    "branch-protection-required-checks",
+    "rollback-and-incident-drill"
+  ],
+  "required_controls": [
+    "separate-public-private-origins",
+    "public-read-only-boundary",
+    "operator-webauthn-enforced",
+    "signed-data-verification",
+    "backup-before-cutover",
+    "staged-cutover",
+    "rollback-ready",
+    "privacy-preserving-operations"
+  ],
+  "deployment_order": [
+    "operator-api",
+    "operator-portal",
+    "public-static"
+  ],
+  "rollback_targets": [
+    "public-static",
+    "operator-portal",
+    "operator-api"
+  ],
+  "public_methods": [
+    "GET",
+    "HEAD"
+  ]
+}

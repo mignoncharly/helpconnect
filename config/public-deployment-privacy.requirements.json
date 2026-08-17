@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "claim": "metadata-minimized-not-anonymous",
+  "public_application": {
+    "account_required": false,
+    "application_telemetry": false,
+    "cookies_issued": false,
+    "device_identifier": false,
+    "geolocation_collected": false,
+    "search_transport": "local-only"
+  },
+  "infrastructure_logs": {
+    "allowed_fields": [
+      "coarse_time_bucket",
+      "status_class",
+      "cache_result"
+    ],
+    "forbidden_fields": [
+      "client_ip",
+      "cookie",
+      "precise_timestamp",
+      "referer",
+      "request_body",
+      "request_query",
+      "unique_request_id",
+      "user_agent"
+    ],
+    "maximum_raw_retention_hours": 24,
+    "provider_evidence_required": true
+  }
+}

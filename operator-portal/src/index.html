@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; connect-src 'self'; img-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types 'none'">
+    <title>HELP CONNECT — portail opérateur</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <header class="banner">
+      <strong>ESPACE OPÉRATEURS — ORIGIN PRIVÉE</strong>
+      <span>Ne jamais servir depuis l’origin de la PWA publique.</span>
+    </header>
+    <main>
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">HELP CONNECT / accès restreint</p>
+          <h1>Validation humanitaire</h1>
+          <p>Authentification par passkey résistante au phishing. Les permissions sont contrôlées côté serveur pour chaque région, catégorie et action.</p>
+        </div>
+        <span class="isolation">Session privée, révocable et séparée de la PWA publique</span>
+      </header>
+
+      <section class="login" data-login-view aria-labelledby="login-title">
+        <h2 id="login-title">Connexion forte</h2>
+        <p>Utilisez la passkey provisionnée par votre organisation. Aucun fichier-clé ou mot de passe n’est accepté.</p>
+        <button type="button" data-login>Se connecter avec une passkey</button>
+        <p class="event" data-login-event aria-live="polite"></p>
+      </section>
+
+      <section data-workspace hidden>
+        <div class="session-bar">
+          <div><span>Session :</span> <strong data-operator></strong></div>
+          <button type="button" class="secondary" data-logout>Déconnexion</button>
+        </div>
+        <p class="scope" data-scope></p>
+
+        <ol class="workflow" aria-label="Étapes du cycle">
+          <li data-stage="DRAFT">1. Création</li>
+          <li data-stage="IN_REVIEW">2. Relecture</li>
+          <li data-stage="VALIDATED">3. Validation</li>
+          <li data-stage="PUBLISHED">4. Publication</li>
+        </ol>
+
+        <section class="workspace" aria-labelledby="record-title">
+          <aside class="record-list">
+            <p class="eyebrow">Fiches autorisées</p>
+            <div data-record-list></div>
+          </aside>
+          <article class="record">
+            <p class="eyebrow">Fiche sélectionnée</p>
+            <h2 id="record-title" data-record-id>Aucune fiche</h2>
+            <dl>
+              <div><dt>Catégorie</dt><dd data-category>—</dd></div>
+              <div><dt>Région</dt><dd data-region>—</dd></div>
+              <div><dt>État éditorial</dt><dd data-workflow-state>—</dd></div>
+              <div><dt>Statut proposé</dt><dd data-availability>—</dd></div>
+            </dl>
+            <p class="rule">Le serveur refuse par défaut toute action hors scope et interdit au créateur de valider sa propre fiche.</p>
+            <div class="actions">
+              <button type="button" data-action="SUBMIT_FOR_REVIEW">Soumettre à relecture</button>
+              <button type="button" data-action="VALIDATE">Valider</button>
+              <button type="button" data-action="PUBLISH">Publier</button>
+              <button type="button" data-action="REVALIDATE">Demander une revalidation</button>
+            </div>
+            <p class="event" data-event aria-live="polite"></p>
+          </article>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

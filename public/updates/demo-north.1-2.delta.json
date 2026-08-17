@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-demo-map-delta",
+  "status": "DEMO_NOT_OPERATIONAL",
+  "regionId": "demo-north",
+  "from": 1,
+  "to": 2,
+  "changes": [
+    { "op": "move-point", "directoryId": "demo-water-a", "position": [34,44] }
+  ]
+}

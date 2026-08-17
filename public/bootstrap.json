@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-demo-map-bootstrap",
+  "revision": 1,
+  "status": "DEMO_NOT_OPERATIONAL",
+  "regions": [
+    {
+      "id": "demo-north",
+      "baseVersion": 1,
+      "path": "regions/demo-north.min.json",
+      "label": { "fr": "Région démo Nord", "en": "North demo region", "ur": "شمالی نمونہ خطہ" }
+    },
+    {
+      "id": "demo-south",
+      "baseVersion": 1,
+      "path": "regions/demo-south.min.json",
+      "label": { "fr": "Région démo Sud", "en": "South demo region", "ur": "جنوبی نمونہ خطہ" }
+    }
+  ]
+}

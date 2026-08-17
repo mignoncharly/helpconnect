@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-first-aid-core",
+  "revision": 1,
+  "locale": "fr",
+  "dir": "ltr",
+  "status": "REVIEW_REQUIRED",
+  "sourceCheckedAt": "2026-08-17",
+  "expiresAt": null,
+  "sources": [
+    { "id": "WHO-BEC-2018", "publisher": "OMS et CICR", "title": "Basic Emergency Care: approach to the acutely ill and injured", "updatedAt": "2018-10-30" },
+    { "id": "IFRC-FA-2025", "publisher": "Fédération internationale des Sociétés de la Croix-Rouge et du Croissant-Rouge", "title": "International First Aid, Resuscitation and Education Guidelines 2025", "updatedAt": "2026-03-18" },
+    { "id": "SJA-BLEEDING-2025", "publisher": "St John Ambulance", "title": "Severe bleeding first aid", "updatedAt": "2025-04-28" },
+    { "id": "SJA-BURNS-2025", "publisher": "St John Ambulance", "title": "Severe burn first aid", "updatedAt": "2025-04-28" },
+    { "id": "SJA-RECOVERY-2025", "publisher": "St John Ambulance", "title": "How to put someone in the recovery position", "updatedAt": "2025-04-28" },
+    { "id": "WHO-NEWBORN-2022", "publisher": "Organisation mondiale de la Santé", "title": "Soins essentiels du nouveau-né et conseils pour prendre soin d’un nouveau-né", "updatedAt": "2022-09-30" }
+  ],
+  "guides": [
+    {
+      "id": "severe-bleeding",
+      "title": "Saignement grave",
+      "summary": "Une perte de sang importante peut tuer rapidement. La priorité est d’appeler de l’aide et de maintenir une pression ferme sur la plaie.",
+      "emergency": "Demandez immédiatement les secours locaux si le sang coule abondamment, jaillit, traverse rapidement les tissus, ne s’arrête pas sous la pression, ou si la personne pâlit, devient confuse ou inconsciente.",
+      "steps": [
+        "Vérifiez que la zone est sûre. Portez des gants si vous en avez, ou évitez le contact direct avec le sang.",
+        "Exposez la plaie et appliquez immédiatement une pression directe, ferme et continue avec une compresse ou un tissu propre non pelucheux.",
+        "Si un objet est planté dans la plaie, ne le retirez pas. Appuyez fermement de chaque côté, jamais directement dessus.",
+        "Faites appeler les secours. Si vous êtes seul, utilisez le haut-parleur du téléphone sans interrompre la pression.",
+        "Maintenez la pression. Ne soulevez pas sans cesse le premier tissu pour vérifier. S’il est saturé, ajoutez du tissu propre et suivez les consignes des secours.",
+        "Allongez la personne si possible, gardez-la au chaud et surveillez continuellement sa conscience et sa respiration jusqu’à l’arrivée d’aide."
+      ],
+      "avoid": [
+        "Ne retirez pas un objet planté et ne fouillez pas la plaie.",
+        "N’improvisez pas de garrot sauf si vous êtes formé ou guidé par un professionnel des secours.",
+        "Ne donnez ni nourriture ni boisson à une personne gravement blessée."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-BLEEDING-2025"]
+    },
+    {
+      "id": "burns",
+      "title": "Brûlure thermique",
+      "summary": "Refroidir rapidement limite les lésions. Une brûlure étendue, profonde, du visage, des voies respiratoires, des mains, des organes génitaux ou d’un jeune enfant exige une aide urgente.",
+      "emergency": "Cherchez immédiatement une aide médicale pour toute brûlure grave, étendue ou profonde, toute difficulté à respirer, brûlure électrique ou chimique, ou si la personne montre des signes de choc.",
+      "steps": [
+        "Éloignez la personne de la source de chaleur seulement si vous pouvez le faire sans danger.",
+        "Refroidissez la brûlure avec de l’eau courante fraîche pendant au moins 20 minutes. Ne refroidissez pas tout le corps.",
+        "Pendant le refroidissement, retirez doucement bijoux et vêtements proches avant le gonflement, mais laissez tout ce qui colle à la peau.",
+        "Après refroidissement, couvrez lâchement avec un pansement stérile sec, un tissu propre non pelucheux ou un film plastique propre posé sans serrer.",
+        "Gardez le reste du corps au chaud, surtout chez les bébés, enfants et personnes âgées, et surveillez la respiration et la conscience.",
+        "Obtenez un avis médical même si la douleur diminue lorsque la brûlure est importante ou située dans une zone à risque."
+      ],
+      "avoid": [
+        "N’utilisez pas de glace, eau glacée, crème, huile, beurre, dentifrice ou poudre.",
+        "Ne percez pas les cloques et ne touchez pas la brûlure.",
+        "N’arrachez jamais un vêtement ou matériau collé à la peau et ne serrez pas le pansement."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-BURNS-2025"]
+    },
+    {
+      "id": "unresponsive-breathing",
+      "title": "Inconscient mais respire",
+      "summary": "Une personne inconsciente peut perdre la protection de ses voies respiratoires. Vérifiez sa respiration et continuez à la surveiller.",
+      "emergency": "Appelez les secours locaux. Si la personne ne respire pas normalement ou seulement de façon irrégulière et haletante, commencez la réanimation selon votre formation ou les instructions du régulateur.",
+      "steps": [
+        "Vérifiez que l’endroit est sûr, parlez fort à la personne et stimulez doucement ses épaules pour rechercher une réponse.",
+        "Ouvrez les voies respiratoires en basculant doucement la tête et en relevant le menton, sauf instruction différente liée à un traumatisme.",
+        "Pendant au plus 10 secondes, regardez si la poitrine bouge et écoutez ou sentez une respiration normale.",
+        "Si elle est inconsciente mais respire normalement et qu’aucune blessure n’empêche de la déplacer, tournez-la sur le côté en position latérale de sécurité.",
+        "Gardez la tête légèrement inclinée en arrière, la bouche dirigée vers le bas et appelez ou faites appeler les secours.",
+        "Restez avec elle et contrôlez souvent sa respiration. Si elle devient anormale, remettez-la sur le dos et commencez la réanimation guidée."
+      ],
+      "avoid": [
+        "Ne laissez jamais seule une personne inconsciente.",
+        "Ne lui donnez rien à boire ou à manger.",
+        "Ne considérez pas des halètements irréguliers comme une respiration normale."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-RECOVERY-2025"]
+    },
+    {
+      "id": "unexpected-birth",
+      "title": "Après une naissance imprévue",
+      "summary": "Cette fiche commence après la naissance du bébé. Elle ne remplace pas une sage-femme et ne décrit aucun geste obstétrical avancé.",
+      "emergency": "Obtenez immédiatement une aide qualifiée pour la mère et le bébé. Une forte hémorragie, une mère inconsciente, un bébé qui ne respire pas normalement, reste bleu, très mou ou froid sont des urgences absolues.",
+      "steps": [
+        "Appelez une aide médicale qualifiée et suivez ses instructions. Lavez-vous les mains si possible et préparez des tissus propres, secs et chauds.",
+        "Dès que le bébé est né, séchez-le complètement avec un tissu propre et sec, en vérifiant s’il respire. Retirez le tissu mouillé.",
+        "Si le bébé respire, placez-le peau contre peau sur la poitrine de la mère, couvrez-les tous les deux et couvrez la tête du bébé pour conserver la chaleur.",
+        "Si le bébé ne respire pas ou halète, appelez à l’aide, frottez doucement son dos deux ou trois fois et suivez immédiatement les instructions de réanimation données par un professionnel.",
+        "Ne tirez ni sur le cordon ni sur le placenta. Gardez le cordon propre et sec et ne mettez aucune substance dessus.",
+        "Si la mère et le bébé sont stables, encouragez l’allaitement précoce et faites-les examiner dès que possible par un professionnel."
+      ],
+      "avoid": [
+        "Ne suspendez pas le bébé, ne le secouez pas et n’aspirez pas systématiquement sa bouche ou son nez.",
+        "Ne baignez pas le bébé et ne le laissez pas mouillé ou découvert.",
+        "Ne tirez pas et ne coupez pas le cordon sans formation, matériel propre ou instruction professionnelle."
+      ],
+      "sources": ["WHO-NEWBORN-2022", "WHO-BEC-2018"]
+    }
+  ]
+}

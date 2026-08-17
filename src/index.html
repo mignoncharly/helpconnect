@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types help-connect-static">
+    <title>HELP CONNECT</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <div class="app-shell" id="app">
+      <main class="screens">
+        <section class="screen" data-screen="home" aria-labelledby="home-title">
+          <header class="topbar topbar--brand">
+            <div class="brand" aria-label="HELP CONNECT">
+              <img src="./icons.svg" width="40" height="40" alt="">
+              <span>HELP CONNECT</span>
+            </div>
+            <button class="icon-button" type="button" data-navigate="settings" data-i18n-aria-label="common.settings" aria-label="Paramètres">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#settings"></use></svg>
+            </button>
+          </header>
+
+          <h1 class="visually-hidden" id="home-title" tabindex="-1" data-i18n="home.title">Accueil</h1>
+
+          <form class="search-box" data-search-form novalidate>
+            <svg aria-hidden="true"><use href="./ui-icons.svg#search"></use></svg>
+            <input type="search" autocomplete="off" enterkeyhint="search" spellcheck="false" data-search-input data-i18n-placeholder="search.placeholder" placeholder="Rechercher une aide ou un lieu" data-i18n-aria-label="search.label" aria-label="Rechercher une aide ou un lieu">
+          </form>
+
+          <section class="recent" data-recent-container hidden aria-labelledby="home-recent-title">
+            <div class="section-heading">
+              <h2 id="home-recent-title" data-i18n="home.recent">Recherches récentes</h2>
+              <button class="text-button" type="button" data-clear-history data-i18n="common.clear">Effacer</button>
+            </div>
+            <div class="chips" data-recent-list></div>
+          </section>
+
+          <section aria-labelledby="aid-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow" data-i18n="home.urgent">Accès rapide</p>
+                <h2 id="aid-heading" data-i18n="home.firstAid">Fiches de premiers secours</h2>
+              </div>
+              <span class="phase-tag" data-i18n="common.phase3">Phase 3</span>
+            </div>
+            <div class="aid-grid">
+              <button class="aid-card" type="button" data-navigate="first-aid">
+                <span class="aid-card__symbol" aria-hidden="true">●</span>
+                <span data-i18n="category.bleeding">Hémorragie</span>
+              </button>
+              <button class="aid-card" type="button" data-navigate="first-aid">
+                <span class="aid-card__symbol" aria-hidden="true">◇</span>
+                <span data-i18n="category.burns">Brûlures</span>
+              </button>
+              <button class="aid-card" type="button" data-navigate="first-aid">
+                <span class="aid-card__symbol" aria-hidden="true">≈</span>
+                <span data-i18n="category.breathing">Respiration</span>
+              </button>
+              <button class="aid-card" type="button" data-navigate="first-aid">
+                <span class="aid-card__symbol" aria-hidden="true">+</span>
+                <span data-i18n="category.childbirth">Accouchement</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="survival-card" aria-labelledby="survival-title">
+            <div class="survival-card__map" aria-hidden="true">
+              <svg><use href="./ui-icons.svg#map"></use></svg>
+            </div>
+            <div class="survival-card__content">
+              <p class="eyebrow" data-i18n="home.survivalEyebrow">Carte de survie</p>
+              <h2 id="survival-title" data-i18n="home.survivalTitle">Aides publiques proches</h2>
+              <p data-i18n="home.survivalText">Consultez la carte ou sa version texte, sans géolocalisation automatique.</p>
+              <button class="button button--small" type="button" data-navigate="map" data-i18n="home.openMap">Ouvrir la carte</button>
+            </div>
+          </section>
+
+          <button class="panic-button" type="button" data-panic-wipe aria-describedby="panic-availability">
+            <span>PW</span>
+            <span data-i18n="panic.label">Panic Wipe</span>
+          </button>
+          <p class="availability" id="panic-availability" data-i18n="panic.available">Efface immédiatement l’interface et, autant que le navigateur le permet, les données de cette PWA. Les fichiers exportés restent sur l’appareil.</p>
+        </section>
+
+        <section class="screen" data-screen="map" aria-labelledby="map-title" hidden>
+          <header class="topbar">
+            <button class="icon-button back-button" type="button" data-navigate="home" data-i18n-aria-label="common.back" aria-label="Retour">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#back"></use></svg>
+            </button>
+            <h1 id="map-title" tabindex="-1" data-i18n="map.title">Carte</h1>
+            <span class="topbar__spacer" aria-hidden="true"></span>
+          </header>
+          <form class="search-box" data-search-form novalidate>
+            <svg aria-hidden="true"><use href="./ui-icons.svg#search"></use></svg>
+            <input type="search" autocomplete="off" enterkeyhint="search" spellcheck="false" data-search-input data-i18n-placeholder="search.placeholder" placeholder="Rechercher une aide ou un lieu" data-i18n-aria-label="search.label" aria-label="Rechercher une aide ou un lieu">
+          </form>
+          <div class="toolbar-row">
+            <div class="chips" data-i18n-aria-label="directory.categories" aria-label="Catégories du répertoire">
+              <button type="button" class="chip" data-directory-category="all" data-i18n="directory.all">Tout</button>
+              <button type="button" class="chip" data-directory-category="water" data-i18n="map.water">Eau</button>
+              <button type="button" class="chip" data-directory-category="hospital" data-i18n="map.hospital">Hôpital</button>
+              <button type="button" class="chip" data-directory-category="food" data-i18n="map.food">Nourriture</button>
+            </div>
+            <button type="button" class="button button--outline button--small" data-network-mode="text" data-i18n="map.textMode">Mode texte</button>
+          </div>
+          <section class="region-package" aria-labelledby="region-package-title">
+            <strong class="review-badge" data-i18n="directory.demoBadge">DÉMONSTRATION — NON OPÉRATIONNEL</strong>
+            <div class="region-package__controls">
+              <label for="region-select" id="region-package-title" data-i18n="map.region">Région schématique</label>
+              <select id="region-select" data-region-select></select>
+              <button type="button" class="button button--small" data-install-region data-i18n="map.loadRegion">Enregistrer cette région</button>
+              <button type="button" class="button button--outline button--small" data-remove-region data-i18n="map.removeRegion" hidden>Supprimer cette région</button>
+            </div>
+            <p data-region-status data-i18n="map.regionNotInstalled">Région non enregistrée hors ligne.</p>
+            <p class="region-privacy" data-i18n="map.regionPrivacy">Le choix reste en mémoire. Le fichier régional persiste dans le navigateur jusqu’à l’utilisation de PW ou à sa suppression par le navigateur.</p>
+          </section>
+          <div class="network-modes" role="group" data-i18n-aria-label="network.label" aria-label="Niveau d’utilisation des données">
+            <button type="button" data-network-mode="normal" aria-pressed="true" data-i18n="network.normal">Normal</button>
+            <button type="button" data-network-mode="low" aria-pressed="false" data-i18n="network.low">Données réduites</button>
+            <button type="button" data-network-mode="text" aria-pressed="false" data-i18n="network.text">Texte seul</button>
+          </div>
+          <p class="mode-status" data-network-mode-status aria-live="polite">Mode A — Normal : carte et données.</p>
+          <section class="map-placeholder" data-map-visual aria-labelledby="map-placeholder-title">
+            <div data-map-empty>
+              <svg aria-hidden="true"><use href="./ui-icons.svg#map"></use></svg>
+              <h2 id="map-placeholder-title" data-i18n="map.placeholder">Carte schématique</h2>
+              <p data-i18n="map.phase">Enregistrez une région de démonstration pour afficher ses limites, routes et points hors ligne.</p>
+            </div>
+            <svg class="schematic-map" data-map-svg viewBox="0 0 100 100" role="img" data-i18n-aria-label="map.schematicLabel" aria-label="Carte schématique non géographique" hidden></svg>
+          </section>
+          <section class="low-data-placeholder" data-low-data-visual aria-labelledby="low-data-title" hidden>
+            <h2 id="low-data-title" data-i18n="network.lowTitle">Vue allégée</h2>
+            <p data-i18n="network.lowBody">Les routes secondaires sont masquées ; seules les limites, les routes principales, les points et la liste restent visibles.</p>
+          </section>
+          <section class="legend" data-map-visual aria-labelledby="legend-title">
+            <div class="section-heading">
+              <h2 id="legend-title" data-i18n="map.legend">Légende</h2>
+              <span class="phase-tag" data-i18n="common.phase5">Phase 5</span>
+            </div>
+            <ul>
+              <li><span class="legend-dot legend-dot--water"></span><span data-i18n="map.water">Eau</span></li>
+              <li><span class="legend-dot legend-dot--hospital"></span><span data-i18n="map.hospital">Hôpital</span></li>
+              <li><span class="legend-dot legend-dot--food"></span><span data-i18n="map.food">Nourriture</span></li>
+              <li><span class="legend-dot legend-dot--shelter"></span><span data-i18n="map.shelter">Abri</span></li>
+              <li><span class="legend-dot legend-dot--generator"></span><span data-i18n="map.generator">Générateur</span></li>
+            </ul>
+          </section>
+          <section class="directory-panel" aria-labelledby="directory-title">
+            <div class="directory-warning">
+              <strong data-i18n="directory.demoBadge">DÉMONSTRATION — NON OPÉRATIONNEL</strong>
+              <span data-i18n="directory.demoWarning">Ces points sont fictifs et servent uniquement à tester l’interface. Ne les utilisez pas pour chercher de l’aide réelle.</span>
+            </div>
+            <div class="section-heading">
+              <h2 id="directory-title" data-i18n="directory.title">Répertoire texte</h2>
+              <span data-directory-count aria-live="polite"></span>
+            </div>
+            <div class="directory-list" data-directory-list></div>
+            <p class="directory-empty" data-directory-empty hidden data-i18n="directory.empty">Aucun point de démonstration ne correspond.</p>
+          </section>
+          <div class="screen-actions">
+            <button class="button button--outline" type="button" data-update-region data-i18n="map.update">Mise à jour</button>
+            <button class="panic-button panic-button--compact" type="button" data-panic-wipe data-i18n-aria-label="panic.label" aria-label="Panic Wipe"><span>PW</span></button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="first-aid" aria-labelledby="first-aid-title" hidden>
+          <header class="topbar">
+            <button class="icon-button back-button" type="button" data-navigate="home" data-i18n-aria-label="common.back" aria-label="Retour">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#back"></use></svg>
+            </button>
+            <h1 id="first-aid-title" tabindex="-1" data-i18n="firstAid.title">Fiches de secours</h1>
+            <span class="topbar__spacer" aria-hidden="true"></span>
+          </header>
+          <form class="search-box" data-search-form novalidate>
+            <svg aria-hidden="true"><use href="./ui-icons.svg#search"></use></svg>
+            <input type="search" autocomplete="off" enterkeyhint="search" spellcheck="false" data-search-input data-i18n-placeholder="firstAid.searchPlaceholder" placeholder="Rechercher dans les fiches" data-i18n-aria-label="firstAid.searchPlaceholder" aria-label="Rechercher dans les fiches">
+          </form>
+          <div class="chips">
+            <button type="button" class="chip" data-future-feature="first-aid" data-i18n="category.bleeding">Hémorragie</button>
+            <button type="button" class="chip" data-future-feature="first-aid" data-i18n="category.burns">Brûlures</button>
+            <button type="button" class="chip" data-future-feature="first-aid" data-i18n="category.breathing">Respiration</button>
+          </div>
+          <p class="screen-intro" data-i18n="firstAid.intro">Ces brouillons suivent des sources officielles mais exigent encore une revue clinique et linguistique avant utilisation terrain.</p>
+          <section class="first-aid-bundle" aria-labelledby="first-aid-bundle-title">
+            <div>
+              <span class="review-badge" data-i18n="firstAid.reviewBadge">REVUE REQUISE</span>
+              <h2 id="first-aid-bundle-title" data-i18n="firstAid.bundleTitle">Paquet de 4 fiches</h2>
+              <p data-first-aid-status data-i18n="firstAid.bundleNotInstalled">Non enregistré hors ligne dans cette langue.</p>
+            </div>
+            <div class="bundle-actions">
+              <button class="button" type="button" data-install-first-aid data-i18n="firstAid.install">Enregistrer hors ligne</button>
+              <button class="button button--outline" type="button" data-remove-first-aid data-i18n="firstAid.remove" hidden>Supprimer du navigateur</button>
+              <button class="button button--outline" type="button" data-export-first-aid data-i18n="firstAid.export">Exporter un fichier</button>
+            </div>
+          </section>
+          <div class="category-list">
+            <button class="category-row" type="button" data-guide-id="severe-bleeding">
+              <span><strong data-i18n="category.bleeding">Hémorragie</strong><small data-i18n="firstAid.pending">Contenu en préparation</small></span>
+              <svg aria-hidden="true"><use href="./ui-icons.svg#file"></use></svg>
+            </button>
+            <button class="category-row" type="button" data-guide-id="burns">
+              <span><strong data-i18n="category.burns">Brûlures</strong><small data-i18n="firstAid.pending">Contenu en préparation</small></span>
+              <svg aria-hidden="true"><use href="./ui-icons.svg#file"></use></svg>
+            </button>
+            <button class="category-row" type="button" data-guide-id="unresponsive-breathing">
+              <span><strong data-i18n="category.breathing">Respiration</strong><small data-i18n="firstAid.pending">Contenu en préparation</small></span>
+              <svg aria-hidden="true"><use href="./ui-icons.svg#file"></use></svg>
+            </button>
+            <button class="category-row" type="button" data-guide-id="unexpected-birth">
+              <span><strong data-i18n="category.childbirth">Accouchement</strong><small data-i18n="firstAid.pending">Contenu en préparation</small></span>
+              <svg aria-hidden="true"><use href="./ui-icons.svg#file"></use></svg>
+            </button>
+          </div>
+          <div class="screen-actions">
+            <span class="phase-tag" data-i18n="common.phase3">Phase 3</span>
+            <button class="panic-button panic-button--compact" type="button" data-panic-wipe data-i18n-aria-label="panic.label" aria-label="Panic Wipe"><span>PW</span></button>
+          </div>
+        </section>
+
+        <section class="screen first-aid-detail" data-screen="first-aid-detail" aria-labelledby="guide-title" hidden>
+          <header class="topbar">
+            <button class="icon-button back-button" type="button" data-navigate="first-aid" data-i18n-aria-label="common.back" aria-label="Retour">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#back"></use></svg>
+            </button>
+            <h1 id="guide-title" tabindex="-1" data-guide-title>Fiche de secours</h1>
+            <button class="panic-button panic-button--compact" type="button" data-panic-wipe data-i18n-aria-label="panic.label" aria-label="Panic Wipe"><span>PW</span></button>
+          </header>
+          <div class="guide-review-warning">
+            <strong data-i18n="firstAid.reviewBadge">REVUE REQUISE</strong>
+            <span data-i18n="firstAid.reviewWarning">Brouillon non approuvé pour un déploiement terrain.</span>
+          </div>
+          <p class="guide-summary" data-guide-summary></p>
+          <section class="guide-emergency" aria-labelledby="guide-emergency-title">
+            <h2 id="guide-emergency-title" data-i18n="firstAid.emergency">Urgence</h2>
+            <p data-guide-emergency></p>
+          </section>
+          <section aria-labelledby="guide-steps-title">
+            <h2 id="guide-steps-title" data-i18n="firstAid.steps">Étapes</h2>
+            <ol class="guide-list" data-guide-steps></ol>
+          </section>
+          <section aria-labelledby="guide-avoid-title">
+            <h2 id="guide-avoid-title" data-i18n="firstAid.avoid">À éviter</h2>
+            <ul class="guide-list guide-list--avoid" data-guide-avoid></ul>
+          </section>
+          <section class="guide-meta" aria-labelledby="guide-sources-title">
+            <h2 id="guide-sources-title" data-i18n="firstAid.sources">Sources</h2>
+            <ul data-guide-sources></ul>
+            <p><span data-i18n="firstAid.sourceChecked">Sources consultées le</span> <time data-guide-source-date></time></p>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="search" aria-labelledby="search-title" hidden>
+          <header class="topbar">
+            <button class="icon-button back-button" type="button" data-navigate="home" data-i18n-aria-label="common.back" aria-label="Retour">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#back"></use></svg>
+            </button>
+            <h1 id="search-title" tabindex="-1" data-i18n="search.title">Recherche</h1>
+            <span class="topbar__spacer" aria-hidden="true"></span>
+          </header>
+          <form class="search-box" data-search-form novalidate>
+            <svg aria-hidden="true"><use href="./ui-icons.svg#search"></use></svg>
+            <input type="search" autocomplete="off" enterkeyhint="search" spellcheck="false" data-search-input data-i18n-placeholder="search.placeholder" placeholder="Rechercher une aide ou un lieu" data-i18n-aria-label="search.label" aria-label="Rechercher une aide ou un lieu">
+          </form>
+          <section class="recent" data-recent-container hidden aria-labelledby="search-recent-title">
+            <div class="section-heading">
+              <h2 id="search-recent-title" data-i18n="home.recent">Recherches récentes</h2>
+              <button class="text-button" type="button" data-clear-history data-i18n="common.clear">Effacer</button>
+            </div>
+            <div class="history-list" data-recent-list></div>
+          </section>
+          <section aria-labelledby="suggestions-title">
+            <h2 id="suggestions-title" data-i18n="search.suggestions">Suggestions</h2>
+            <div class="chips chips--wrap">
+              <button type="button" class="chip" data-directory-category="water" data-i18n="search.water">Point d’eau</button>
+              <button type="button" class="chip" data-directory-category="hospital" data-i18n="search.hospital">Hôpital</button>
+              <button type="button" class="chip" data-directory-category="first-aid" data-i18n="search.firstAid">Premiers secours</button>
+            </div>
+          </section>
+          <section class="search-results" aria-labelledby="search-results-title">
+            <div class="directory-warning">
+              <strong data-i18n="directory.demoBadge">DÉMONSTRATION — NON OPÉRATIONNEL</strong>
+              <span data-i18n="directory.demoWarning">Ces points sont fictifs et servent uniquement à tester l’interface. Ne les utilisez pas pour chercher de l’aide réelle.</span>
+            </div>
+            <div class="section-heading">
+              <h2 id="search-results-title" data-i18n="search.results">Résultats locaux</h2>
+              <span data-directory-count aria-live="polite"></span>
+            </div>
+            <div class="directory-list" data-directory-list></div>
+            <p class="directory-empty" data-directory-empty hidden data-i18n="directory.empty">Aucun point de démonstration ne correspond.</p>
+          </section>
+          <button class="panic-button panic-button--compact panic-button--end" type="button" data-panic-wipe data-i18n-aria-label="panic.label" aria-label="Panic Wipe"><span>PW</span></button>
+        </section>
+
+        <section class="screen screen--settings" data-screen="settings" aria-labelledby="settings-title" hidden>
+          <header class="topbar">
+            <button class="icon-button back-button" type="button" data-back data-i18n-aria-label="common.back" aria-label="Retour">
+              <svg aria-hidden="true"><use href="./ui-icons.svg#back"></use></svg>
+            </button>
+            <h1 id="settings-title" tabindex="-1" data-i18n="settings.title">Paramètres</h1>
+            <span class="topbar__spacer" aria-hidden="true"></span>
+          </header>
+          <div class="settings-list">
+            <details open>
+              <summary data-i18n="settings.language">Langue</summary>
+              <p class="setting-help" data-i18n="settings.languageHelp">Langues de prototype à valider avec les utilisateurs terrain.</p>
+              <label class="setting-option"><span data-i18n="language.fr">Français</span><input type="radio" name="language" value="fr" checked></label>
+              <label class="setting-option"><span data-i18n="language.en">English</span><input type="radio" name="language" value="en"></label>
+              <label class="setting-option"><span data-i18n="language.ur">اردو</span><input type="radio" name="language" value="ur"></label>
+            </details>
+            <div class="setting-row">
+              <span><strong data-i18n="panic.label">Panic Wipe</strong><small data-i18n="panic.settingHelp">Toujours disponible. Purge best effort des données contrôlées par la PWA ; aucun effacement complet du téléphone n’est promis.</small></span>
+              <button class="panic-button panic-button--compact" type="button" data-panic-wipe data-i18n-aria-label="panic.label" aria-label="Panic Wipe"><span>PW</span></button>
+            </div>
+            <details open>
+              <summary data-i18n="settings.display">Affichage</summary>
+              <label class="setting-option"><span data-i18n="settings.light">Clair</span><input type="radio" name="theme" value="light" checked></label>
+              <label class="setting-option"><span data-i18n="settings.dark">Sombre</span><input type="radio" name="theme" value="dark"></label>
+            </details>
+          </div>
+          <p class="session-note" data-i18n="settings.session">La langue et le thème sont conservés uniquement pour cet onglet.</p>
+        </section>
+      </main>
+
+      <p class="phase-notice" data-phase-notice hidden></p>
+      <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-live-status></p>
+
+      <div class="consent-backdrop" data-consent-modal hidden>
+        <section class="consent-dialog" role="dialog" aria-modal="true" aria-labelledby="consent-title" aria-describedby="consent-description">
+          <h2 id="consent-title" data-consent-title></h2>
+          <p id="consent-description" data-consent-description></p>
+          <div class="consent-actions">
+            <button class="button button--outline" type="button" data-consent-cancel data-i18n="firstAid.cancel">Annuler</button>
+            <button class="button" type="button" data-consent-confirm>Confirmer</button>
+          </div>
+        </section>
+      </div>
+
+      <nav class="bottom-nav" data-bottom-nav data-i18n-aria-label="nav.label" aria-label="Navigation principale">
+        <button type="button" data-navigate="home" aria-current="page">
+          <svg aria-hidden="true"><use href="./ui-icons.svg#home"></use></svg><span data-i18n="nav.home">Accueil</span>
+        </button>
+        <button type="button" data-navigate="map">
+          <svg aria-hidden="true"><use href="./ui-icons.svg#map"></use></svg><span data-i18n="nav.map">Carte</span>
+        </button>
+        <button type="button" data-navigate="first-aid">
+          <svg aria-hidden="true"><use href="./ui-icons.svg#file"></use></svg><span data-i18n="nav.firstAid">Fiches</span>
+        </button>
+        <button type="button" data-navigate="search">
+          <svg aria-hidden="true"><use href="./ui-icons.svg#search"></use></svg><span data-i18n="nav.search">Recherche</span>
+        </button>
+      </nav>
+
+      <div class="message-catalog" hidden>
+        <span data-message="feature" data-i18n="message.feature">Cette fonction sera activée dans une phase ultérieure.</span>
+        <span data-message="search" data-i18n="message.search">Résultats calculés localement. Le terme reste uniquement en mémoire.</span>
+        <span data-message="directoryLoadError" data-i18n="directory.loadError">Le répertoire local n’a pas pu être chargé.</span>
+        <span data-i18n="directory.expiresAt">Expiration</span>
+        <span data-i18n="directory.revision">Révision</span>
+        <span data-i18n="directory.status.CLOSED">Fermé</span>
+        <span data-i18n="directory.status.STALE">À revalider — données expirées</span>
+        <span data-i18n="directory.status.UNAVAILABLE">Indisponible</span>
+        <span data-i18n="directory.status.VERIFIED">Vérifié</span>
+        <span data-i18n="directory.verifiedAt">Dernière vérification</span>
+        <span data-message="networkNormal" data-i18n="network.normalStatus">Mode A — Normal : carte et données.</span>
+        <span data-message="networkLow" data-i18n="network.lowStatus">Mode B — Données réduites : vue allégée et liste.</span>
+        <span data-message="networkText" data-i18n="network.textStatus">Mode C — Texte seul : aucune carte, liste uniquement.</span>
+        <span data-message="regionInstallTitle" data-i18n="map.installWarningTitle">Enregistrer cette région ?</span>
+        <span data-message="regionInstallBody" data-i18n="map.installWarningBody">Ce fichier schématique persistera dans les données du navigateur jusqu’à l’utilisation de PW ou à sa suppression par le navigateur.</span>
+        <span data-message="regionConfirmInstall" data-i18n="map.confirmInstall">Enregistrer la région</span>
+        <span data-message="regionInstalled" data-i18n="map.regionInstalled">Région enregistrée et disponible hors ligne.</span>
+        <span data-message="regionNotInstalled" data-i18n="map.regionNotInstalled">Région non enregistrée hors ligne.</span>
+        <span data-message="regionInstallError" data-i18n="map.installError">Impossible d’enregistrer cette région. Vérifiez la connexion puis réessayez.</span>
+        <span data-message="regionRemoved" data-i18n="map.regionRemoved">Région supprimée du stockage hors ligne.</span>
+        <span data-message="regionRemoveError" data-i18n="map.removeError">Impossible de supprimer cette région pour le moment.</span>
+        <span data-message="regionUpdating" data-i18n="map.updating">Recherche des micro-mises à jour…</span>
+        <span data-message="regionUpToDate" data-i18n="map.upToDate">Cette région est déjà à jour.</span>
+        <span data-message="regionUpdatedDelta" data-i18n="map.updatedDelta">Région mise à jour avec des micro-deltas.</span>
+        <span data-message="regionUpdatedSnapshot" data-i18n="map.updatedSnapshot">Chaîne de deltas indisponible : snapshot régional appliqué.</span>
+        <span data-message="regionUpdateError" data-i18n="map.updateError">Mise à jour impossible. L’ancienne version hors ligne reste intacte.</span>
+        <span data-message="regionVersion" data-i18n="map.version">Version</span>
+        <span data-message="historyCleared" data-i18n="message.historyCleared">Historique temporaire effacé.</span>
+        <span data-message="languageError" data-i18n="message.languageError">Cette langue n’a pas pu être chargée. Le français reste actif.</span>
+        <span data-message="offlineReady" data-i18n="message.offlineReady">Mode hors ligne prêt.</span>
+        <span data-message="offlineUnavailable" data-i18n="message.offlineUnavailable">Mode hors ligne indisponible pour le moment.</span>
+        <span data-message="firstAidInstallTitle" data-i18n="firstAid.installWarningTitle">Enregistrer dans le navigateur ?</span>
+        <span data-message="firstAidInstallBody" data-i18n="firstAid.installWarningBody">Ces fiches resteront dans les données du navigateur jusqu’à l’utilisation de PW ou à leur suppression par le navigateur.</span>
+        <span data-message="firstAidConfirmInstall" data-i18n="firstAid.confirmInstall">Enregistrer</span>
+        <span data-message="firstAidExportTitle" data-i18n="firstAid.exportWarningTitle">Exporter sur l’appareil ?</span>
+        <span data-message="firstAidExportBody" data-i18n="firstAid.exportWarningBody">Le fichier restera dans les téléchargements et HELP CONNECT ne pourra pas le supprimer, même après l’activation de Panic Wipe.</span>
+        <span data-message="firstAidConfirmExport" data-i18n="firstAid.confirmExport">Exporter</span>
+        <span data-message="firstAidInstalled" data-i18n="firstAid.bundleInstalled">4 fiches enregistrées hors ligne dans cette langue.</span>
+        <span data-message="firstAidNotInstalled" data-i18n="firstAid.bundleNotInstalled">Non enregistré hors ligne dans cette langue.</span>
+        <span data-message="firstAidInstallError" data-i18n="firstAid.installError">Impossible d’enregistrer les fiches. Vérifiez la connexion puis réessayez.</span>
+        <span data-message="firstAidInstallRequired" data-i18n="firstAid.installRequired">Enregistrez d’abord le paquet de cette langue pour ouvrir une fiche.</span>
+        <span data-message="firstAidRemoved" data-i18n="firstAid.removed">Fiches hors ligne supprimées pour cette langue.</span>
+        <span data-message="firstAidRemoveError" data-i18n="firstAid.removeError">Impossible de supprimer ces fiches pour le moment.</span>
+      </div>
+    </div>
+    <noscript>HELP CONNECT nécessite JavaScript pour la navigation et le mode hors ligne.</noscript>
+  </body>
+</html>

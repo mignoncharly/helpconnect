@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "release_id": "replace-with-release-id",
+  "generated_at": "2000-01-01T00:00:00.000Z",
+  "pilot_decision": "NO_GO",
+  "pilot_report_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "origins": {
+    "public": "https://replace-public.example",
+    "operator": "https://replace-operators.example"
+  },
+  "artifacts": {
+    "public": {
+      "path": "dist",
+      "file_count": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "operator": {
+      "path": "operator-portal/dist",
+      "file_count": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "evidence": [
+    {
+      "id": "phase-18-pilot-outcome",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "pilot-reviewer"
+    },
+    {
+      "id": "final-build-and-signatures",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "release-reviewer"
+    },
+    {
+      "id": "public-live-security",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    },
+    {
+      "id": "public-live-privacy",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "privacy-reviewer"
+    },
+    {
+      "id": "operator-live-security",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    },
+    {
+      "id": "transactional-restore",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "operations-reviewer"
+    },
+    {
+      "id": "secrets-and-admin-access",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    },
+    {
+      "id": "dns-and-cdn-configuration",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "infrastructure-reviewer"
+    },
+    {
+      "id": "branch-protection-required-checks",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "release-reviewer"
+    },
+    {
+      "id": "rollback-and-incident-drill",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "operations-reviewer"
+    }
+  ],
+  "controls": [
+    { "id": "separate-public-private-origins", "status": "NOT_READY", "owner_role": "security-lead" },
+    { "id": "public-read-only-boundary", "status": "NOT_READY", "owner_role": "security-lead" },
+    { "id": "operator-webauthn-enforced", "status": "NOT_READY", "owner_role": "security-lead" },
+    { "id": "signed-data-verification", "status": "NOT_READY", "owner_role": "release-lead" },
+    { "id": "backup-before-cutover", "status": "NOT_READY", "owner_role": "operations-lead" },
+    { "id": "staged-cutover", "status": "NOT_READY", "owner_role": "release-lead" },
+    { "id": "rollback-ready", "status": "NOT_READY", "owner_role": "operations-lead" },
+    { "id": "privacy-preserving-operations", "status": "NOT_READY", "owner_role": "privacy-lead" }
+  ],
+  "operations": {
+    "change_window_approved": false,
+    "backup_verified": false,
+    "staged_cutover": false,
+    "rollback_ready": false,
+    "privacy_preserving_monitoring": false,
+    "deployment_order": [
+      "operator-api",
+      "operator-portal",
+      "public-static"
+    ],
+    "rollback_targets": [
+      "public-static",
+      "operator-portal",
+      "operator-api"
+    ],
+    "public_methods": [
+      "GET",
+      "HEAD"
+    ]
+  }
+}

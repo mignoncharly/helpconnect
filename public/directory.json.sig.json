@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "bundle_id": "hc-artifact-signature",
+  "algorithm": "ECDSA_P256_SHA256",
+  "key_id": "hc-demo-data-2026-a",
+  "artifact_path": "directory.json",
+  "sequence": 2,
+  "issued_at": "2026-08-17T12:00:00Z",
+  "expires_at": "2030-08-17T12:00:00Z",
+  "sha256": "v-AG6ptH35zzHB7ONogmdH-zW0kt9MCI5RAtXfCt7fs",
+  "signature": "EQER07htdeyrcNN2KAbtT5PpSZsoqFonX7wkFyEztzq2TdaO6JYKvHKS49QsNvgyN4joiW034ug7AYh3_ggEIw"
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "prerequisite_decision": "GO",
+  "dossier_max_age_days": 30,
+  "evidence_max_age_days": 90,
+  "scope": {
+    "region_count": 1,
+    "point_count": {
+      "minimum": 20,
+      "maximum": 50
+    },
+    "category_count": {
+      "minimum": 3,
+      "maximum": 5
+    },
+    "operator_count": {
+      "minimum": 2,
+      "maximum": 5
+    },
+    "participant_count": {
+      "minimum": 5,
+      "maximum": 20
+    }
+  },
+  "allowed_categories": [
+    "water",
+    "hospital",
+    "food",
+    "shelter",
+    "first-aid",
+    "generator"
+  ],
+  "required_security_evidence": [
+    "phase-16-physical-android",
+    "independent-penetration-test",
+    "public-live-deployment",
+    "operator-live-deployment",
+    "transactional-storage-and-restore",
+    "secrets-and-administrator-review"
+  ],
+  "required_human_reviews": [
+    "location-publishability",
+    "clinical-content",
+    "language-and-icons",
+    "panic-wipe-interaction"
+  ],
+  "required_operational_drills": [
+    "emergency-unpublish",
+    "operator-revocation",
+    "signed-release-rollback",
+    "incident-response"
+  ],
+  "required_metrics": [
+    "time-to-resource",
+    "icon-comprehension",
+    "freshness-comprehension",
+    "text-mode-completion",
+    "translation-comprehension",
+    "interaction-latency",
+    "transferred-bytes",
+    "offline-task-completion",
+    "panic-wipe-completion",
+    "manipulation-errors"
+  ],
+  "required_stop_conditions": [
+    "suspected-harmful-location",
+    "critical-medical-or-translation-error",
+    "signature-or-integrity-failure",
+    "unauthorized-operator-access",
+    "panic-wipe-failure",
+    "privacy-or-consent-breach"
+  ]
+}

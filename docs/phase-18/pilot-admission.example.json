@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "pilot_id": "replace-with-pilot-id",
+  "generated_at": "2000-01-01T00:00:00.000Z",
+  "build_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "security_decision": "NO_GO",
+  "external_evidence": [
+    {
+      "id": "phase-16-physical-android",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "independent-reviewer"
+    },
+    {
+      "id": "independent-penetration-test",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "independent-reviewer"
+    },
+    {
+      "id": "public-live-deployment",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "infrastructure-reviewer"
+    },
+    {
+      "id": "operator-live-deployment",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "infrastructure-reviewer"
+    },
+    {
+      "id": "transactional-storage-and-restore",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "operations-reviewer"
+    },
+    {
+      "id": "secrets-and-administrator-review",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    }
+  ],
+  "scope": {
+    "region_ids": [
+      "replace-with-approved-region"
+    ],
+    "point_count": 20,
+    "categories": [
+      "water",
+      "hospital",
+      "food"
+    ],
+    "operator_count": 2,
+    "participant_count": 5
+  },
+  "human_reviews": [
+    {
+      "id": "location-publishability",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "field-safety-reviewer"
+    },
+    {
+      "id": "clinical-content",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "clinical-reviewer"
+    },
+    {
+      "id": "language-and-icons",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "language-reviewer"
+    },
+    {
+      "id": "panic-wipe-interaction",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "field-safety-reviewer"
+    }
+  ],
+  "operational_drills": [
+    {
+      "id": "emergency-unpublish",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "operations-reviewer"
+    },
+    {
+      "id": "operator-revocation",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    },
+    {
+      "id": "signed-release-rollback",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "release-reviewer"
+    },
+    {
+      "id": "incident-response",
+      "status": "NOT_PROVIDED",
+      "reviewed_at": "2000-01-01T00:00:00.000Z",
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reviewer_role": "security-reviewer"
+    }
+  ],
+  "measurement": {
+    "consent_script_approved": false,
+    "in_app_telemetry": false,
+    "individual_tracking": false,
+    "persistent_participant_ids": false,
+    "free_text_collection": false,
+    "metrics": [
+      "time-to-resource",
+      "icon-comprehension",
+      "freshness-comprehension",
+      "text-mode-completion",
+      "translation-comprehension",
+      "interaction-latency",
+      "transferred-bytes",
+      "offline-task-completion",
+      "panic-wipe-completion",
+      "manipulation-errors"
+    ]
+  },
+  "stop_conditions": [
+    {
+      "id": "suspected-harmful-location",
+      "armed": false,
+      "owner_role": "pilot-safety-lead"
+    },
+    {
+      "id": "critical-medical-or-translation-error",
+      "armed": false,
+      "owner_role": "pilot-safety-lead"
+    },
+    {
+      "id": "signature-or-integrity-failure",
+      "armed": false,
+      "owner_role": "release-lead"
+    },
+    {
+      "id": "unauthorized-operator-access",
+      "armed": false,
+      "owner_role": "security-lead"
+    },
+    {
+      "id": "panic-wipe-failure",
+      "armed": false,
+      "owner_role": "pilot-safety-lead"
+    },
+    {
+      "id": "privacy-or-consent-breach",
+      "armed": false,
+      "owner_role": "privacy-lead"
+    }
+  ]
+}

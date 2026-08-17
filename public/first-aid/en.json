@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-first-aid-core",
+  "revision": 1,
+  "locale": "en",
+  "dir": "ltr",
+  "status": "REVIEW_REQUIRED",
+  "sourceCheckedAt": "2026-08-17",
+  "expiresAt": null,
+  "sources": [
+    { "id": "WHO-BEC-2018", "publisher": "WHO and ICRC", "title": "Basic Emergency Care: approach to the acutely ill and injured", "updatedAt": "2018-10-30" },
+    { "id": "IFRC-FA-2025", "publisher": "International Federation of Red Cross and Red Crescent Societies", "title": "International First Aid, Resuscitation and Education Guidelines 2025", "updatedAt": "2026-03-18" },
+    { "id": "SJA-BLEEDING-2025", "publisher": "St John Ambulance", "title": "Severe bleeding first aid", "updatedAt": "2025-04-28" },
+    { "id": "SJA-BURNS-2025", "publisher": "St John Ambulance", "title": "Severe burn first aid", "updatedAt": "2025-04-28" },
+    { "id": "SJA-RECOVERY-2025", "publisher": "St John Ambulance", "title": "How to put someone in the recovery position", "updatedAt": "2025-04-28" },
+    { "id": "WHO-NEWBORN-2022", "publisher": "World Health Organization", "title": "Essential newborn care and caring for a newborn", "updatedAt": "2022-09-30" }
+  ],
+  "guides": [
+    {
+      "id": "severe-bleeding",
+      "title": "Severe bleeding",
+      "summary": "Heavy blood loss can kill quickly. The priority is to call for help and keep firm pressure on the wound.",
+      "emergency": "Call local emergency help immediately if blood is flowing heavily, spurting, rapidly soaking material, not stopping with pressure, or if the person becomes pale, confused or unresponsive.",
+      "steps": [
+        "Check that the area is safe. Wear gloves if available or avoid direct contact with blood.",
+        "Expose the wound and immediately apply firm, continuous direct pressure with a dressing or clean non-fluffy cloth.",
+        "If an object is embedded, do not remove it. Press firmly on either side, never directly on the object.",
+        "Ask someone to call emergency help. If alone, use the phone speaker without stopping pressure.",
+        "Maintain pressure and do not repeatedly lift the first cloth to check. If soaked, add clean material and follow emergency instructions.",
+        "Help the person lie down if possible, keep them warm, and continuously watch their response and breathing until help arrives."
+      ],
+      "avoid": [
+        "Do not remove an embedded object or probe the wound.",
+        "Do not improvise a tourniquet unless trained or directly instructed by an emergency professional.",
+        "Do not give food or drink to a seriously injured person."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-BLEEDING-2025"]
+    },
+    {
+      "id": "burns",
+      "title": "Thermal burn",
+      "summary": "Rapid cooling limits injury. A large or deep burn, or one affecting the face, airway, hands, genitals or a young child needs urgent help.",
+      "emergency": "Seek urgent medical help for any severe, large or deep burn, breathing difficulty, electrical or chemical burn, or signs of shock.",
+      "steps": [
+        "Move the person away from the heat source only when it is safe to do so.",
+        "Cool the burn under cool running water for at least 20 minutes. Do not cool the whole body.",
+        "While cooling, gently remove nearby jewellery and clothing before swelling starts, but leave anything stuck to the skin.",
+        "After cooling, cover loosely with a dry sterile dressing, clean non-fluffy cloth, or clean plastic film laid over the burn without wrapping tightly.",
+        "Keep the rest of the body warm, especially for babies, children and older people, and monitor breathing and response.",
+        "Get medical advice even if pain improves when the burn is large or affects a high-risk area."
+      ],
+      "avoid": [
+        "Do not use ice, iced water, cream, oil, butter, toothpaste or powder.",
+        "Do not burst blisters or touch the burn.",
+        "Do not pull off stuck clothing or material and do not wrap a covering tightly."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-BURNS-2025"]
+    },
+    {
+      "id": "unresponsive-breathing",
+      "title": "Unresponsive but breathing",
+      "summary": "An unresponsive person may lose protection of their airway. Check breathing and continue monitoring it.",
+      "emergency": "Call local emergency help. If the person is not breathing normally or is only gasping irregularly, start resuscitation according to your training or dispatcher instructions.",
+      "steps": [
+        "Check that the place is safe, speak loudly to the person and gently stimulate their shoulders to look for a response.",
+        "Open the airway by gently tilting the head and lifting the chin, unless trauma guidance tells you otherwise.",
+        "For no more than 10 seconds, watch for chest movement and listen or feel for normal breathing.",
+        "If unresponsive but breathing normally, and no injury prevents movement, roll the person onto their side in the recovery position.",
+        "Keep the head slightly tilted back, mouth pointing down, and call or send someone for emergency help.",
+        "Stay and check breathing often. If it becomes abnormal, roll them onto their back and begin guided resuscitation."
+      ],
+      "avoid": [
+        "Never leave an unresponsive person alone.",
+        "Do not give anything to eat or drink.",
+        "Do not treat irregular gasps as normal breathing."
+      ],
+      "sources": ["WHO-BEC-2018", "IFRC-FA-2025", "SJA-RECOVERY-2025"]
+    },
+    {
+      "id": "unexpected-birth",
+      "title": "After an unexpected birth",
+      "summary": "This guide starts after the baby has been born. It does not replace a skilled birth attendant or describe advanced obstetric procedures.",
+      "emergency": "Get skilled help immediately for both mother and baby. Heavy bleeding, an unresponsive mother, or a baby who is not breathing normally, remains blue, very floppy or cold are absolute emergencies.",
+      "steps": [
+        "Call skilled medical help and follow their instructions. Wash your hands if possible and prepare clean, dry, warm cloths.",
+        "As soon as the baby is born, dry them thoroughly with a clean dry cloth while checking breathing. Remove the wet cloth.",
+        "If breathing, place the baby skin-to-skin on the mother’s chest, cover them both and cover the baby’s head to retain warmth.",
+        "If the baby is not breathing or is gasping, call for help, gently rub the back two or three times and immediately follow professional resuscitation instructions.",
+        "Do not pull the cord or placenta. Keep the cord clean and dry and put no substance on it.",
+        "If mother and baby are stable, support early breastfeeding and arrange professional assessment as soon as possible."
+      ],
+      "avoid": [
+        "Do not hang or shake the baby and do not routinely suction the mouth or nose.",
+        "Do not bathe the baby or leave them wet or uncovered.",
+        "Do not pull or cut the cord without training, clean equipment or professional instruction."
+      ],
+      "sources": ["WHO-NEWBORN-2022", "WHO-BEC-2018"]
+    }
+  ]
+}

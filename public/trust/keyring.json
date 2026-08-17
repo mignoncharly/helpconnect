@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "bundle_id": "hc-signing-keyring",
+  "revision": 1,
+  "issued_at": "2026-08-17T12:00:00Z",
+  "expires_at": "2031-08-17T12:00:00Z",
+  "keys": [
+    {
+      "id": "hc-demo-data-2026-a",
+      "algorithm": "ECDSA_P256_SHA256",
+      "status": "ACTIVE",
+      "not_before": "2026-08-17T12:00:00Z",
+      "not_after": "2031-08-17T12:00:00Z",
+      "public_jwk": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "aHPQBO3hHTe5KwLipCeGFVYD82c36nH8VRu6JentVL0",
+        "y": "G1WL8je5ZJ9bpmGmmZVhqZu8PMXseVYQY0x01CFYF9A",
+        "ext": true,
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "revoked_key_ids": []
+}

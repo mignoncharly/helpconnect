@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-demo-map-updates",
+  "status": "DEMO_NOT_OPERATIONAL",
+  "regions": [
+    {
+      "regionId": "demo-north",
+      "currentVersion": 3,
+      "snapshotPath": "regions/demo-north.v3.min.json",
+      "deltas": [
+        { "from": 1, "to": 2, "path": "updates/demo-north.1-2.delta.json" },
+        { "from": 2, "to": 3, "path": "updates/demo-north.2-3.delta.json" }
+      ]
+    },
+    {
+      "regionId": "demo-south",
+      "currentVersion": 4,
+      "snapshotPath": "regions/demo-south.v4.min.json",
+      "deltas": [
+        { "from": 3, "to": 4, "path": "updates/demo-south.3-4.delta.json" }
+      ]
+    }
+  ]
+}

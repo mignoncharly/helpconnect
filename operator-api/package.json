@@ -1,0 +1,16 @@
+{
+  "name": "help-connect-operator-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Private HELP CONNECT operator API security boundary",
+  "dependencies": {
+    "@simplewebauthn/server": "13.3.2"
+  },
+  "scripts": {
+    "start": "node src/server.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

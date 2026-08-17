@@ -1,0 +1,47 @@
+name: Security audit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security-audit:
+    name: Validate application security controls
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Use Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Reject vulnerable dependencies
+        run: npm audit --audit-level=low
+      - name: Validate repository
+        run: npm run validate
+      - name: Generate security verdict
+        run: npm run security:audit
+      - name: Preserve security report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: security-audit-report
+          path: reports/security-audit-report.json
+          archive: false
+          if-no-files-found: warn
+          retention-days: 30

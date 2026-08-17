@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "hc-demo-map-delta",
+  "status": "DEMO_NOT_OPERATIONAL",
+  "regionId": "demo-north",
+  "from": 2,
+  "to": 3,
+  "changes": [
+    { "op": "replace-road", "roadIndex": 1, "points": [[27,14],[41,37],[50,68],[57,89]] }
+  ]
+}

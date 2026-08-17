@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "bundle_id": "hc-demo-directory",
+  "revision": 2,
+  "status": "DEMO_NOT_OPERATIONAL",
+  "published_at": "2026-08-17T12:00:00Z",
+  "points": [
+    { "id": "demo-water-a", "category": "water", "region": "demo-north", "coarse_location": { "fr": "Zone démo Nord", "en": "North demo zone", "ur": "شمالی نمونہ علاقہ" }, "status": "VERIFIED", "verified_at": "2026-08-17T09:00:00Z", "expires_at": "2030-08-18T09:00:00Z", "revision": 2 },
+    { "id": "demo-clinic-b", "category": "hospital", "region": "demo-north", "coarse_location": { "fr": "Zone démo Est", "en": "East demo zone", "ur": "مشرقی نمونہ علاقہ" }, "status": "STALE", "verified_at": "2026-08-16T08:00:00Z", "expires_at": "2026-08-17T10:00:00Z", "revision": 3 },
+    { "id": "demo-food-c", "category": "food", "region": "demo-north", "coarse_location": { "fr": "Zone démo Centre", "en": "Central demo zone", "ur": "مرکزی نمونہ علاقہ" }, "status": "UNAVAILABLE", "verified_at": "2026-08-17T09:15:00Z", "expires_at": null, "revision": 1 },
+    { "id": "demo-shelter-d", "category": "shelter", "region": "demo-south", "coarse_location": { "fr": "Zone démo Ouest", "en": "West demo zone", "ur": "مغربی نمونہ علاقہ" }, "status": "CLOSED", "verified_at": "2026-08-17T09:30:00Z", "expires_at": null, "revision": 4 },
+    { "id": "demo-first-aid-e", "category": "first-aid", "region": "demo-south", "coarse_location": { "fr": "Zone démo Sud", "en": "South demo zone", "ur": "جنوبی نمونہ علاقہ" }, "status": "VERIFIED", "verified_at": "2026-08-17T10:00:00Z", "expires_at": "2030-08-18T10:00:00Z", "revision": 2 },
+    { "id": "demo-generator-f", "category": "generator", "region": "demo-south", "coarse_location": { "fr": "Zone démo Sud-Est", "en": "South-east demo zone", "ur": "جنوب مشرقی نمونہ علاقہ" }, "status": "STALE", "verified_at": "2026-08-15T10:00:00Z", "expires_at": "2026-08-16T10:00:00Z", "revision": 5 }
+  ]
+}

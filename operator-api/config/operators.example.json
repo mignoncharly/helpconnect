@@ -1,0 +1,25 @@
+{
+  "operators": [
+    {
+      "id": "operator-demo-disabled",
+      "display_name": "Disabled example — replace through controlled provisioning",
+      "status": "REVOKED",
+      "credentials": [
+        {
+          "id": "replace-with-base64url-webauthn-credential-id",
+          "public_key": "replace-with-base64url-cose-public-key",
+          "counter": 0,
+          "transports": ["internal"],
+          "status": "REVOKED"
+        }
+      ],
+      "grants": [
+        {
+          "actions": ["READ", "EDIT"],
+          "regions": ["demo-north"],
+          "categories": ["water", "food"]
+        }
+      ]
+    }
+  ]
+}

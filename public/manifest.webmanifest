@@ -1,0 +1,20 @@
+{
+  "name": "HELP CONNECT",
+  "short_name": "HELP CONNECT",
+  "description": "Accès léger et hors ligne à des informations publiques de secours.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "./icons.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

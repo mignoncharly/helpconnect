@@ -1,0 +1,44 @@
+{
+  "name": "help-connect-public-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["operator-api", "operator-portal"],
+  "description": "Public, offline-first and low-bandwidth HELP CONNECT PWA",
+  "scripts": {
+    "build": "node scripts/build.mjs && node scripts/build-operator.mjs && node scripts/validate-dist.mjs && node scripts/validate-operator-dist.mjs && node scripts/validate-privacy.mjs && node scripts/validate-cache-policy.mjs && node scripts/check-budget.mjs",
+    "weight:ci": "node scripts/build.mjs && node scripts/check-budget.mjs",
+    "weight:validate": "node scripts/validate-weight-ci.mjs",
+    "build:operator": "node scripts/build-operator.mjs",
+    "budget": "node scripts/check-budget.mjs",
+    "lint": "node scripts/lint.mjs",
+    "check:operator-api": "node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
+    "integrity:bootstrap-demo": "node scripts/bootstrap-demo-trust.mjs",
+    "integrity:sign-keyring": "node scripts/sign-trust-keyring.mjs",
+    "integrity:sign-release": "node scripts/sign-public-release.mjs",
+    "integrity:verify": "node scripts/verify-signed-assets.mjs",
+    "security:check-deployment": "node scripts/check-public-deployment.mjs",
+    "security:check-operator-deployment": "node scripts/check-operator-deployment.mjs",
+    "security:audit": "node scripts/validate-security-audit.mjs",
+    "governance:decision": "node scripts/validate-governance-decision.mjs",
+    "pilot:check": "node scripts/check-pilot-readiness.mjs",
+    "release:hash": "node scripts/hash-release.mjs",
+    "deployment:check": "node scripts/check-deployment-readiness.mjs",
+    "privacy:check-deployment": "node scripts/check-public-privacy-evidence.mjs",
+    "privacy:validate": "node scripts/validate-privacy.mjs",
+    "cache:validate": "node scripts/validate-cache-policy.mjs",
+    "test": "node --test",
+    "test:offline": "node scripts/offline-smoke.mjs",
+    "test:constrained": "node scripts/constrained-smoke.mjs",
+    "publish:demo": "node scripts/publish-directory.mjs",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.sw.json && tsc -p operator-portal/tsconfig.json",
+    "validate": "npm run lint && npm run weight:validate && npm run typecheck && npm run check:operator-api && npm test && npm run build && npm run governance:decision && npm run security:audit"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "decision": "GO",
+  "decision_basis": "STAKEHOLDER_OVERRIDE",
+  "authority_role": "accountable-stakeholder",
+  "decided_at": "2026-08-17T22:28:57.476Z",
+  "scope": [
+    "phase-17",
+    "phase-18"
+  ],
+  "assertion": "The accountable stakeholder attests that all required Phase 17 and Phase 18 activities were completed and authorizes lifting their documented blockers.",
+  "evidence_disposition": "STAKEHOLDER_ATTESTED_NOT_VERIFIED_IN_WORKSPACE",
+  "accepted_documentation_gaps": [
+    "external-artifacts-not-present-in-workspace",
+    "phase-18-aggregate-results-not-present-in-workspace"
+  ],
+  "attested_requirement_ids": [
+    "phase-16-physical-android",
+    "independent-penetration-test",
+    "public-live-deployment",
+    "operator-live-deployment",
+    "transactional-storage-and-restore",
+    "secrets-and-administrator-review",
+    "phase-18-field-pilot-completed",
+    "phase-18-reduced-scope",
+    "phase-18-consent-approved",
+    "human-review:location-publishability",
+    "human-review:clinical-content",
+    "human-review:language-and-icons",
+    "human-review:panic-wipe-interaction",
+    "operational-drill:emergency-unpublish",
+    "operational-drill:operator-revocation",
+    "operational-drill:signed-release-rollback",
+    "operational-drill:incident-response",
+    "metric:time-to-resource",
+    "metric:icon-comprehension",
+    "metric:freshness-comprehension",
+    "metric:text-mode-completion",
+    "metric:translation-comprehension",
+    "metric:interaction-latency",
+    "metric:transferred-bytes",
+    "metric:offline-task-completion",
+    "metric:panic-wipe-completion",
+    "metric:manipulation-errors",
+    "stop-condition:suspected-harmful-location",
+    "stop-condition:critical-medical-or-translation-error",
+    "stop-condition:signature-or-integrity-failure",
+    "stop-condition:unauthorized-operator-access",
+    "stop-condition:panic-wipe-failure",
+    "stop-condition:privacy-or-consent-breach"
+  ]
+}
