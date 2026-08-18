@@ -12,7 +12,7 @@ import { publicMetaCsp, renderPublicStaticHeaders, standaloneFirstAidMetaCsp } f
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = path.join(projectRoot, "dist");
 const files = await listRelativeFiles(outputDirectory);
-await verifySignedAssetSet(outputDirectory, path.join(projectRoot, "config", "demo-root.public.json"));
+await verifySignedAssetSet(outputDirectory, path.join(projectRoot, "config", "trust-root.public.json"));
 
 const expected = [...deployableAssets].sort();
 if (JSON.stringify(files) !== JSON.stringify(expected)) {

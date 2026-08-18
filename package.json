@@ -13,7 +13,7 @@
     "budget": "node scripts/check-budget.mjs",
     "lint": "node scripts/lint.mjs",
     "check:operator-api": "node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
-    "integrity:bootstrap-demo": "node scripts/bootstrap-demo-trust.mjs",
+    "integrity:rotate-root": "node scripts/rotate-trust-root.mjs",
     "integrity:sign-keyring": "node scripts/sign-trust-keyring.mjs",
     "integrity:sign-release": "node scripts/sign-public-release.mjs",
     "integrity:verify": "node scripts/verify-signed-assets.mjs",

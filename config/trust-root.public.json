@@ -1,0 +1,13 @@
+{
+  "key_id": "hc-root-2026-a",
+  "public_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "hTr0pxUoC4ByDfOrO2NFbzenCqtD9ijd3Jic1fZjkIY",
+    "y": "0r5vggW5GHawIw4jHXiL_cSXuvZ0lGY1GJSlOVapClc",
+    "ext": true,
+    "key_ops": [
+      "verify"
+    ]
+  }
+}
