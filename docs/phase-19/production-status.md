@@ -6,7 +6,8 @@ des détails d'origins, d'hébergement et de configuration interne.
 
 ## Verdict
 
-**`NO_GO` — 14 écarts.**
+**`NO_GO` — 11 écarts.** Le dossier en comptait 14 le 17 août ; trois ont été
+fermés le 18 août par le déploiement du store transactionnel.
 
 L'origin publique a été mise en service le 17 août 2026, **avant** l'établissement
 du dossier Phase 19. Cette note enregistre ce fait ; elle ne le régularise pas.
@@ -40,19 +41,24 @@ mécaniquement, et non déclarés :
 Les preuves `PASS` reposent sur des sorties de commandes réelles, liées par
 SHA-256 au dossier privé, et non sur des attestations.
 
-## Les 14 écarts
+## Les 11 écarts
 
-**Bloqués par l'absence d'enrôlement — 4.** L'API opérateur ne démarre pas : le
+**Fermés le 18 août 2026 — 3.** Le store transactionnel est déployé, sauvegardé
+par une tâche planifiée qui revalide chaque copie, et restauré dans une base
+isolée. Réserve enregistrée dans le dossier : le store ne contient encore aucune
+donnée, la restauration a donc revalidé zéro événement — le mécanisme est prouvé,
+pas la reprise de données d'exploitation. Concerne `transactional-restore`,
+`backup-before-cutover` et `backup_verified`.
+
+**Bloqués par l'absence d'enrôlement — 2.** L'API opérateur ne démarre pas : le
 registre d'opérateurs vide est refusé, et aucune cérémonie d'enrôlement WebAuthn
 n'existe dans ce dépôt. Aucune passkey ne peut donc être provisionnée avec les
-outils actuels. Concerne `operator-live-security`, `operator-webauthn-enforced`,
-`transactional-restore` et `backup-before-cutover`.
+outils actuels. Concerne `operator-live-security` et `operator-webauthn-enforced`.
 
-**Non exercés — 6.** La mise en ligne est allée directement en production, sans
+**Non exercés — 5.** La mise en ligne est allée directement en production, sans
 staging. Il n'existe qu'une seule release, donc aucune cible de retour arrière,
 et le rollback n'a jamais été joué. Concerne `rollback-and-incident-drill`,
-`staged-cutover`, `rollback-ready`, `backup_verified`, `rollback_ready` et
-`staged_cutover`.
+`staged-cutover`, `rollback-ready`, `rollback_ready` et `staged_cutover`.
 
 **Non documentés — 3.** Ni inventaire des secrets et des accès administrateur,
 ni politique de rotation. La branche `main` n'est pas protégée : les workflows
@@ -72,14 +78,15 @@ absence en contrôle.
 
 Par ordre de dépendance :
 
-1. store transactionnel opérateur ;
-2. sauvegarde et restauration vérifiée ;
+1. ~~store transactionnel opérateur~~ — fait le 18 août 2026 ;
+2. ~~sauvegarde et restauration vérifiée~~ — fait, sur un store encore vide ;
 3. cérémonie d'enrôlement WebAuthn à usage unique et auditable ;
 4. provisionnement du premier opérateur ;
 5. contrôles live de l'origin opérateur ;
-6. exercice de rollback chronométré ;
-7. revue des secrets et des accès administrateur ;
-8. protection de branche et fenêtre de changement approuvée.
+6. rejeu de la restauration une fois le store porteur de données réelles ;
+7. exercice de rollback chronométré ;
+8. revue des secrets et des accès administrateur ;
+9. protection de branche et fenêtre de changement approuvée.
 
 Tant qu'aucun opérateur réel n'est provisionné, le service API reste désactivé
 et la Phase 19 reste `NO_GO`.
