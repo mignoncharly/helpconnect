@@ -7,10 +7,11 @@ import { securityAuditCommand, validateSecurityAuditPolicy } from "./security-au
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readProjectFile = (relativePath) => readFile(path.join(projectRoot, relativePath), "utf8");
-const [workflow, packageSource, lockSource, operatorConfig, operatorServer, operatorStore, securityHeaders, requirements, phase18Requirements, overrideSource] = await Promise.all([
+const [workflow, packageSource, lockSource, operatorBootstrap, operatorConfig, operatorServer, operatorStore, securityHeaders, requirements, phase18Requirements, overrideSource] = await Promise.all([
   readProjectFile(".github/workflows/security-audit.yml"),
   readProjectFile("package.json"),
   readProjectFile("package-lock.json"),
+  readProjectFile("operator-api/src/bootstrap-enrollment.mjs"),
   readProjectFile("operator-api/src/config-validation.mjs"),
   readProjectFile("operator-api/src/server.mjs"),
   readProjectFile("operator-api/src/store.mjs"),
@@ -33,7 +34,7 @@ const violations = validateSecurityAuditPolicy({
   workflow,
   packageJson: JSON.parse(packageSource),
   lockfile: JSON.parse(lockSource),
-  sources: { operatorConfig, operatorServer, operatorStore, securityHeaders, secretScan },
+  sources: { operatorBootstrap, operatorConfig, operatorServer, operatorStore, securityHeaders, secretScan },
   candidateFiles
 });
 if (violations.length > 0) throw new Error(`Security audit gate failed:\n${violations.join("\n")}`);

@@ -10,7 +10,8 @@ function validInput() {
     sources: {
       operatorConfig: "origin.origin !== value; rpId !== origin.hostname",
       operatorServer: 'openOperatorStore({ databasePath: storePath }); store.verifyIntegrity(); headers["x-hc-rate-key"]; 64 * 1024; server.listen(port, "127.0.0.1"); server.requestTimeout = 10_000',
-      operatorStore: 'validateAuditJournal(events); "Broken audit journal chain"; "audit journal is append-only"',
+      operatorStore: 'validateAuditJournal(events); "Broken audit journal chain"; "audit journal is append-only"; bootstrap_ceremonies',
+      operatorBootstrap: 'BOOTSTRAP_ALREADY_CONSUMED; BOOTSTRAP_EXPIRED; timingSafeEqual(a, b); id: settings.operatorId',
       securityHeaders: "default-src 'none'; require-trusted-types-for 'script'; publickey-credentials-get=()",
       secretScan: {}
     },
