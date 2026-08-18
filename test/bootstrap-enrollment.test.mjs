@@ -161,6 +161,19 @@ test("a replayed flow id cannot enrol a second passkey", async () => {
   }
 });
 
+test("a ceremony window longer than an hour is refused at construction", () => {
+  const space = workspace();
+  const store = openOperatorStore({ databasePath: space.database });
+  try {
+    assert.doesNotThrow(() => ceremony(store, { expiresAt: "2026-08-18T11:00:00Z" }));
+    assert.throws(() => ceremony(store, { expiresAt: "2026-08-18T11:00:01Z" }), /at most one hour/);
+    assert.throws(() => ceremony(store, { expiresAt: "2026-09-18T10:00:00Z" }), /at most one hour/);
+  } finally {
+    store.close();
+    space.cleanup();
+  }
+});
+
 test("the configuration contract rejects unusable bootstrap settings", () => {
   const base = { tokenDigest, expiresAt: "2026-08-18T11:00:00Z", operatorId: "security-admin", displayName: "Security Admin", grants };
   assert.doesNotThrow(() => validateBootstrapConfiguration(base));

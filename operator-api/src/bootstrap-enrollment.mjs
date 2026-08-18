@@ -19,6 +19,10 @@ import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { auditEventHash } from "./security-core.mjs";
 
 const challengeLifetimeMs = 120_000;
+// Une ceremonie est une fenetre d'exception : elle se compte en minutes. Sans
+// borne, une expiration lointaine transformerait le mode bootstrap en porte
+// permanente, ce que la configuration seule ne suffirait plus a empecher.
+const maximumCeremonyLifetimeMs = 60 * 60 * 1000;
 
 function digest(value) {
   return createHash("sha256").update(value).digest();
@@ -44,6 +48,7 @@ export function validateBootstrapConfiguration(input) {
 
 export function createBootstrapCeremony({ authenticator, store, configuration, now = Date.now }) {
   const settings = validateBootstrapConfiguration(configuration);
+  if (settings.expiresAt - now() > maximumCeremonyLifetimeMs) throw new Error("Bootstrap expiry must be at most one hour ahead");
   const flows = new Map();
 
   function assertUsable(token) {
