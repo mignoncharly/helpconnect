@@ -8,7 +8,7 @@ import { DatabaseSync, backup } from "node:sqlite";
 import { auditEventHash, validateAuditJournal, validateOperators, validateRevocationJournal } from "./security-core.mjs";
 import { validatePrivateRecord } from "../../scripts/publication-workflow.mjs";
 
-export const storeSchemaVersion = 1;
+export const storeSchemaVersion = 2;
 export const auditGenesisHash = "GENESIS";
 
 const schema = `
@@ -47,6 +47,27 @@ CREATE TABLE IF NOT EXISTS revocations (
   actor_id TEXT NOT NULL,
   target_id TEXT NOT NULL
 ) STRICT;
+
+-- Consommation des jetons d'enrolement. La cle primaire sur l'empreinte rend
+-- le rejeu impossible, y compris apres redemarrage : c'est la persistance, et
+-- non une variable en memoire, qui garantit l'usage unique.
+CREATE TABLE IF NOT EXISTS bootstrap_ceremonies (
+  token_digest TEXT PRIMARY KEY,
+  consumed_at TEXT NOT NULL,
+  operator_id TEXT NOT NULL
+) STRICT;
+
+CREATE TRIGGER IF NOT EXISTS bootstrap_ceremonies_append_only_update
+BEFORE UPDATE ON bootstrap_ceremonies
+BEGIN
+  SELECT RAISE(ABORT, 'bootstrap ceremonies are append-only');
+END;
+
+CREATE TRIGGER IF NOT EXISTS bootstrap_ceremonies_append_only_delete
+BEFORE DELETE ON bootstrap_ceremonies
+BEGIN
+  SELECT RAISE(ABORT, 'bootstrap ceremonies are append-only');
+END;
 
 -- Defense en profondeur : meme un ecrivain SQL direct ne peut ni rompre la
 -- chaine de hash, ni reecrire l'histoire. La verification applicative reste
@@ -128,8 +149,13 @@ export function openOperatorStore(options) {
     const existingVersion = readSchemaVersion(database);
     if (existingVersion === undefined) {
       database.prepare("INSERT INTO schema_meta (key, value) VALUES ('schema_version', ?)").run(String(storeSchemaVersion));
-    } else if (existingVersion !== storeSchemaVersion) {
+    } else if (existingVersion > storeSchemaVersion) {
+      // Une base plus recente que le code serait interpretee a tort : on refuse.
       throw new Error(`Unsupported store schema version: ${existingVersion}`);
+    } else if (existingVersion < storeSchemaVersion) {
+      // Les tables et declencheurs ajoutes sont tous CREATE ... IF NOT EXISTS,
+      // donc l'execution du schema ci-dessus a deja mis la base a niveau.
+      database.prepare("UPDATE schema_meta SET value = ? WHERE key = 'schema_version'").run(String(storeSchemaVersion));
     }
   } catch (error) {
     database.close();
@@ -200,6 +226,14 @@ export function openOperatorStore(options) {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(event.sequence, event.at, event.request_id, event.actor_id, event.action, event.outcome, event.target, event.reason, event.previous_hash, event.hash);
     },
+    consumeBootstrapToken({ tokenDigest, operatorId, at }) {
+      if (typeof tokenDigest !== "string" || tokenDigest.length < 16) throw new Error("Invalid bootstrap token digest");
+      if (typeof operatorId !== "string" || operatorId.length === 0) throw new Error("Invalid bootstrap operator id");
+      // La contrainte de cle primaire fait echouer tout rejeu, donc toute la
+      // transaction d'enrolement est annulee.
+      database.prepare("INSERT INTO bootstrap_ceremonies (token_digest, consumed_at, operator_id) VALUES (?, ?, ?)")
+        .run(tokenDigest, at ?? new Date().toISOString(), operatorId);
+    },
     appendRevocation(event) {
       validateRevocationJournal([event]);
       database.prepare("INSERT INTO revocations (at, kind, actor_id, target_id) VALUES (?, ?, ?, ?)")
@@ -214,6 +248,15 @@ export function openOperatorStore(options) {
     readAuditEvents,
     readRevocations,
     auditHead,
+
+    isBootstrapTokenConsumed(tokenDigest) {
+      assertOpen();
+      return database.prepare("SELECT 1 FROM bootstrap_ceremonies WHERE token_digest = ?").get(tokenDigest) !== undefined;
+    },
+    readBootstrapCeremonies() {
+      assertOpen();
+      return database.prepare("SELECT token_digest, consumed_at, operator_id FROM bootstrap_ceremonies ORDER BY consumed_at ASC").all();
+    },
     verifyIntegrity,
 
     // Tout-ou-rien sur les quatre domaines : ils vivent dans une seule base,

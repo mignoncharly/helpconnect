@@ -43,6 +43,8 @@ npm run store:restore-proof -- --backup path/to/backup.db --into path/to/isolate
 
 `npm run release:hash` lie les octets exacts des deux distributions par une empreinte d’arbre déterministe. `npm run deployment:check -- …` recalcule ces empreintes et bloque la production sans pilote `GO`, origins distinctes, preuves live, sauvegarde, rollback et frontière publique `GET`/`HEAD`. Voir le [runbook de Phase 19](./docs/phase-19/README.md).
 
+La cérémonie d'enrôlement bootstrap ([ADR-013](./docs/phase-19/adr-013-operator-store.md), section enrôlement) n'existe que si `HC_BOOTSTRAP_TOKEN_DIGEST_FILE` est fourni au service. L'identité de l'opérateur et ses habilitations viennent de la configuration, jamais de la requête : le client ne choisit ni qui il devient, ni ce qu'il obtient. L'usage unique est persisté dans le store, donc un redémarrage ne rouvre pas la fenêtre. La restriction par adresse est appliquée par le proxy, seul endroit où l'adresse du client est encore connue.
+
 `npm run store:migrate -- …` migre les quatre anciens fichiers plats vers le store transactionnel décrit par [l'ADR-013](./docs/phase-19/adr-013-operator-store.md). La commande est **dry-run par défaut** : elle lit, valide, hashe chaque source et n'écrit qu'avec `--commit`, après avoir sauvegardé les originaux. `--rollback` restaure l'état antérieur et écarte la base sans la détruire.
 
 `npm run store:backup -- …` prend une copie cohérente en ligne, sans arrêter le service, puis **rouvre la copie et la revalide** : une sauvegarde non vérifiée ne prouve rien. `npm run store:restore-proof -- …` restaure dans une base isolée, revalide toute la chaîne d'audit et compare le hash de tête au hash attendu.

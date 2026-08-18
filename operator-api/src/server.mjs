@@ -1,7 +1,9 @@
+import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { createSecurityService, clearSessionCookie, SecurityError, sessionCookie } from "./security-core.mjs";
 import { openOperatorStore } from "./store.mjs";
+import { createBootstrapCeremony } from "./bootstrap-enrollment.mjs";
 import { createWebAuthnAdapter } from "./webauthn-adapter.mjs";
 import { validateOperatorBoundaryConfiguration } from "./config-validation.mjs";
 import { validatePrivateRecord } from "../../scripts/publication-workflow.mjs";
@@ -32,6 +34,24 @@ const records = new Map(store.readRecords().map((record) => {
 }));
 const authenticator = createWebAuthnAdapter({ rpId, expectedOrigin });
 const auditHead = store.auditHead();
+
+// Mode bootstrap : actif uniquement si la configuration est fournie. Sans elle,
+// aucune route d'enrolement n'existe. Retirer ces variables de l'environnement
+// suffit donc a supprimer la ceremonie, sans redeploiement de code.
+const bootstrapDigestFile = process.env.HC_BOOTSTRAP_TOKEN_DIGEST_FILE;
+const bootstrap = bootstrapDigestFile
+  ? createBootstrapCeremony({
+      authenticator,
+      store,
+      configuration: {
+        tokenDigest: readFileSync(bootstrapDigestFile, "utf8").trim(),
+        expiresAt: requiredEnvironment("HC_BOOTSTRAP_EXPIRES_AT"),
+        operatorId: requiredEnvironment("HC_BOOTSTRAP_OPERATOR_ID"),
+        displayName: requiredEnvironment("HC_BOOTSTRAP_DISPLAY_NAME"),
+        grants: JSON.parse(requiredEnvironment("HC_BOOTSTRAP_GRANTS"))
+      }
+    })
+  : undefined;
 
 // Une operation de securite peut emettre une revocation ET son evenement
 // d'audit. Les deux sinks sont appeles separement par le service, donc on les
@@ -72,7 +92,12 @@ async function unitOfWork(work) {
   if (outcome.error) throw outcome.error;
   return outcome.value;
 }
-const security = createSecurityService({
+// Le registre vide est refuse par createSecurityService, a juste titre. Mais la
+// ceremonie d'enrolement existe precisement pour ce cas : sans cette exception,
+// l'API ne pourrait jamais demarrer pour creer son premier operateur.
+// Registre vide + bootstrap actif => seules les routes d'enrolement repondent.
+if (operators.length === 0 && !bootstrap) throw new Error("Empty operator registry and no bootstrap ceremony configured");
+const security = operators.length === 0 ? undefined : createSecurityService({
   authenticator,
   expectedOrigin,
   operators,
@@ -103,6 +128,28 @@ const server = createServer(async (request, response) => {
 
       if (method === "POST" && origin !== expectedOrigin) throw new SecurityError(403, "REQUEST_FORBIDDEN");
 
+      if (url.pathname.startsWith("/v1/bootstrap/")) {
+        if (!bootstrap) throw new SecurityError(404, "NOT_FOUND");
+        const body = await jsonBody(request);
+        try {
+          if (method === "POST" && url.pathname === "/v1/bootstrap/options") {
+            requireExactBody(body, ["token"]);
+            return sendJson(response, 200, await bootstrap.beginEnrollment({ token: body.token }));
+          }
+          if (method === "POST" && url.pathname === "/v1/bootstrap/verify") {
+            requireExactBody(body, ["flow_id", "response", "token"]);
+            const result = await bootstrap.completeEnrollment({ flowId: body.flow_id, requestId, response: body.response, token: body.token });
+            return sendJson(response, 201, result);
+          }
+        } catch (error) {
+          if (error instanceof SecurityError) throw error;
+          const code = typeof error?.message === "string" && error.message.startsWith("BOOTSTRAP_") ? error.message : "BOOTSTRAP_FAILED";
+          throw new SecurityError(code === "BOOTSTRAP_FLOW_INVALID" ? 400 : 403, code);
+        }
+        throw new SecurityError(404, "NOT_FOUND");
+      }
+      // Hors ceremonie, aucune route ne repond tant qu'aucun operateur n'existe.
+      if (!security) throw new SecurityError(503, "OPERATOR_REGISTRY_EMPTY");
       if (method === "POST" && url.pathname === "/v1/auth/options") {
         const body = await jsonBody(request);
         requireExactBody(body, []);
@@ -171,6 +218,10 @@ server.maxHeadersCount = 50;
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Private operator API listening on loopback:${port}; TLS termination is required upstream`);
+  if (bootstrap) {
+    const status = bootstrap.status();
+    console.log(`BOOTSTRAP ENROLMENT ACTIVE for operator ${status.operatorId} (expired=${status.expired}, consumed=${status.consumed}); disable it once the ceremony is done`);
+  }
 });
 
 function requiredEnvironment(name) {

@@ -15,7 +15,7 @@
     "build:operator": "node scripts/build-operator.mjs",
     "budget": "node scripts/check-budget.mjs",
     "lint": "node scripts/lint.mjs",
-    "check:operator-api": "node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/store.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
+    "check:operator-api": "node --check operator-api/src/bootstrap-enrollment.mjs && node --check operator-api/src/config-validation.mjs && node --check operator-api/src/security-core.mjs && node --check operator-api/src/store.mjs && node --check operator-api/src/webauthn-adapter.mjs && node --check operator-api/src/server.mjs",
     "integrity:rotate-root": "node scripts/rotate-trust-root.mjs",
     "integrity:sign-keyring": "node scripts/sign-trust-keyring.mjs",
     "integrity:sign-release": "node scripts/sign-public-release.mjs",
