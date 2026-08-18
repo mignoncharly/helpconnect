@@ -4,6 +4,29 @@ PWA publique de secours conçue pour fonctionner hors ligne, sur réseau très l
 
 Les Phases 17 et 18 ont une décision effective **`GO` par `STAKEHOLDER_OVERRIDE`**. Le stakeholder responsable atteste leur réalisation et accepte que les artefacts externes ne soient pas vérifiables dans ce workspace ; les rapports conservent explicitement cette distinction. La Phase 19 reste séparément `NO_GO` et aucun déploiement n’a été exécuté.
 
+## État de service
+
+**La PWA publique est en service** pour de vrais utilisateurs : artefact signé,
+chaîne de signatures vérifiée depuis l'origin, budgets de poids tenus.
+
+**Le portail opérateur n'est pas un outil d'administration actif.** Aucun compte
+opérateur n'existe, aucune passkey n'est provisionnée, et l'API opérateur est
+volontairement arrêtée et désactivée. L'enrôlement WebAuthn est **reporté par
+décision du stakeholder responsable**, avec réévaluation due le **18 septembre
+2026**.
+
+Conséquences, à connaître avant de compter sur ce périmètre :
+
+- aucune création, modification ou invalidation de point d'aide n'est possible ;
+- la révocation d'un accès opérateur n'est pas outillée — il n'existe aucun
+  compte à révoquer, ce qui borne le risque, mais aucune procédure non plus ;
+- la réponse à incident sur le système opérateur est manuelle ;
+- toute mise à jour des données publiques passe par une nouvelle release signée.
+
+Ce report est enregistré comme écart ouvert, jamais comme contrôle satisfait :
+le dossier de déploiement reste `NO_GO`. Il vit hors de ce dépôt, avec les
+preuves collectées sur l'hôte.
+
 ## Prérequis et commandes
 
 Node.js 22 ou supérieur.
