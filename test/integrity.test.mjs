@@ -13,7 +13,7 @@ import {
 import { verifySignedAssetSet } from "../scripts/integrity-verify-lib.mjs";
 
 const publicRoot = new URL("../public/", import.meta.url);
-const rootConfigUrl = new URL("../config/demo-root.public.json", import.meta.url);
+const rootConfigUrl = new URL("../config/trust-root.public.json", import.meta.url);
 const verificationTime = new Date("2026-08-18T12:00:00Z");
 const readBytes = async (path) => new Uint8Array(await readFile(new URL(path, publicRoot)));
 const readJson = async (path) => JSON.parse(await readFile(new URL(path, publicRoot), "utf8"));
@@ -28,7 +28,7 @@ async function fixture() {
 test("the complete release verifies from the embedded-root configuration", async () => {
   const result = await verifySignedAssetSet(fileURLToPath(new URL("../public", import.meta.url)), fileURLToPath(rootConfigUrl), verificationTime);
   assert.equal(result.artifactCount, 13);
-  assert.equal(result.keyring.revision, 1);
+  assert.equal(result.keyring.revision, 2);
 });
 
 test("one altered artifact byte is rejected", async () => {

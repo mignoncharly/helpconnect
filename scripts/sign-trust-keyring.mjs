@@ -6,7 +6,7 @@ import { createSignedEnvelope, loadExternalPrivateKey, requireInstant } from "./
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const keyringPath = path.join(projectRoot, "public", "trust", "keyring.json");
-const rootConfig = JSON.parse(await readFile(path.join(projectRoot, "config", "demo-root.public.json"), "utf8"));
+const rootConfig = JSON.parse(await readFile(path.join(projectRoot, "config", "trust-root.public.json"), "utf8"));
 const keyringBytes = new Uint8Array(await readFile(keyringPath));
 const keyring = validateTrustKeyring(JSON.parse(new TextDecoder().decode(keyringBytes)));
 const issuedAt = requireInstant(process.env.HC_ROOT_SIGNING_ISSUED_AT ?? new Date().toISOString().replace(/\.\d{3}Z$/, "Z"), "HC_ROOT_SIGNING_ISSUED_AT");

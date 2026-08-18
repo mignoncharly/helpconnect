@@ -56,7 +56,41 @@ npm run integrity:sign-release
 npm run integrity:verify
 ```
 
-En production, ces opérations doivent s’exécuter dans un staging non servi, idéalement avec une clé non exportable en HSM/KMS puis un déploiement atomique. `npm run integrity:bootstrap-demo` sert uniquement à régénérer les fixtures : il crée des clés éphémères et détruit les clés privées, donc il ne constitue pas une gestion de clés opérationnelle.
+En production, ces opérations doivent s’exécuter dans un staging non servi, idéalement avec une clé non exportable en HSM/KMS puis un déploiement atomique.
+
+## Rotation du 18 août 2026 — sortie des clés de démonstration
+
+Jusqu’à cette date, la keyring publiée était signée par une racine de démonstration dont les deux moitiés privées avaient été détruites à la génération. La vérification fonctionnait, mais aucune rotation, aucune révocation et aucune re-signature n’étaient possibles : la première mise à jour de jeu de données aurait été rejetée par la PWA elle-même.
+
+`npm run integrity:rotate-root` remplace cette racine. Le script génère une paire racine et une paire de données P-256, écrit les moitiés privées **hors du workspace** en `0600` sans jamais les afficher, refuse d’écraser un fichier de clé existant, et interdit de réutiliser un identifiant retiré. Il exige `--confirm-rotation`.
+
+```bash
+HC_SIGNING_KEY_DIR=<répertoire hors dépôt> \
+HC_ROTATION_ROOT_KEY_ID=hc-root-2026-a \
+HC_ROTATION_DATA_KEY_ID=hc-data-2026-a \
+HC_ROTATION_KEYRING_EXPIRES_AT=2031-08-18T00:00:00Z \
+  npm run integrity:rotate-root -- --confirm-rotation
+
+HC_ROOT_SIGNING_PRIVATE_JWK_FILE=<dir>/hc-root-2026-a.private.jwk.json npm run integrity:sign-keyring
+HC_SIGNING_KEY_ID=hc-data-2026-a HC_SIGNING_PRIVATE_JWK_FILE=<dir>/hc-data-2026-a.private.jwk.json \
+HC_SIGNING_EXPIRES_AT=2030-08-18T00:00:00Z npm run integrity:sign-release
+npm run integrity:verify && npm run build
+```
+
+Résultat : keyring révision 2, `hc-data-2026-a` `ACTIVE`, et `hc-demo-data-2026-a` comme `hc-demo-root-2026-a` inscrits dans `revoked_key_ids`. La racine publique embarquée dans le bundle vient désormais de `config/trust-root.public.json`.
+
+Le générateur de démonstration `scripts/bootstrap-demo-trust.mjs` est supprimé : tant qu’il existait, un `npm run` malencontreux pouvait réécrire la racine de production avec une clé jetable.
+
+### Impact sur les clients ayant déjà du contenu en cache
+
+Toutes les réponses sont servies en `Cache-Control: no-store` : le seul cache est celui du Service Worker.
+
+- **Coque applicative** — `app.js`, `trust/keyring.json` et sa signature appartiennent au même précache versionné (`hc-shell-<empreinte>`), rempli par un unique `addAll` puis activé d’un bloc. L’empreinte change avec la keyring, donc un client passe de l’ancien couple cohérent (ancienne racine, ancienne keyring) au nouveau sans fenêtre intermédiaire. `directory.json` et `bootstrap.json` font partie de ce précache et arrivent re-signés avec lui.
+- **Données optionnelles déjà installées** — régions, deltas et fiches de premiers secours survivent aux versions de coque dans `hc-data-*` et `hc-first-aid-v1`. Elles sont revérifiées à chaque lecture (`readCachedSignedResponse` dans `src/app.ts`), donc contre la **nouvelle** keyring. Leur enveloppe porte `hc-demo-data-2026-a`, désormais révoquée : `verifyArtifact` les rejette avec « Signing key revoked ».
+
+Conséquence assumée : après cette mise à jour, un utilisateur doit se reconnecter une fois pour réinstaller les régions et fiches qu’il avait téléchargées. Un utilisateur hors ligne au moment de la bascule perd temporairement l’accès à ces bundles, la coque et l’annuaire restant fonctionnels.
+
+L’alternative — laisser l’ancienne clé `RETIRED` dans la keyring au lieu de la révoquer — préserverait ces caches pendant une période de chevauchement. Elle est écartée ici : la clé de démonstration ne doit plus rien authentifier. Le choix se lit dans `revoked_key_ids` et peut être révisé à la révision suivante.
 
 ## Vérifications réalisées
 

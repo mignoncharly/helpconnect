@@ -2,11 +2,11 @@
   "schema_version": 1,
   "bundle_id": "hc-artifact-signature",
   "algorithm": "ECDSA_P256_SHA256",
-  "key_id": "hc-demo-data-2026-a",
+  "key_id": "hc-data-2026-a",
   "artifact_path": "first-aid/en.json",
   "sequence": 1,
-  "issued_at": "2026-08-17T12:00:00Z",
-  "expires_at": "2030-08-17T12:00:00Z",
+  "issued_at": "2026-08-18T08:49:02Z",
+  "expires_at": "2030-08-18T00:00:00Z",
   "sha256": "BQ59X5SzDlfp9WRd7Ohvk4hF2zo78yCI5aE4dldaNuA",
-  "signature": "L_3KkwII8YuJ8dx1_MJrxLq6o1FF8o7KfH6GWW9mAZlArCJThys_y1Z8hkowyUB6sFD4Rn0jTu0pNRCBRsrW_g"
+  "signature": "ZaMYbQWagaW3062UdcicKGJbDAAuvTvniPFiGx9xL6MVBBQN7OfZlN98UUTDvdc2pLvPvUV_3aC0EjRqy8hjrA"
 }

@@ -2,11 +2,11 @@
   "schema_version": 1,
   "bundle_id": "hc-artifact-signature",
   "algorithm": "ECDSA_P256_SHA256",
-  "key_id": "hc-demo-data-2026-a",
+  "key_id": "hc-data-2026-a",
   "artifact_path": "updates/demo-north.2-3.delta.json",
   "sequence": 3,
-  "issued_at": "2026-08-17T12:00:00Z",
-  "expires_at": "2030-08-17T12:00:00Z",
+  "issued_at": "2026-08-18T08:49:02Z",
+  "expires_at": "2030-08-18T00:00:00Z",
   "sha256": "4TXOA76pYzxmqENB0k97i8R2n7z0hJe2zsHUYNQrTG4",
-  "signature": "_-WFR5r0GOd5AIa0KgBta8APuaAe9uqnf2r5YD8NZuAdeDy5lD_hhfozhcZqOV5MbDUxi6IjGvdLZIA2c5MIAg"
+  "signature": "rQhtv_abnEYc-cnhZcqjDtvB0YoxCaVhBu4nn8xFGUPJto_fO6zuxPnpStNnyRP873gPwcf0KrI_wnjkcambKQ"
 }

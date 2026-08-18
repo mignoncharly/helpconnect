@@ -19,7 +19,7 @@ import {
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = path.join(projectRoot, "dist");
-const rootConfigPath = path.join(projectRoot, "config", "demo-root.public.json");
+const rootConfigPath = path.join(projectRoot, "config", "trust-root.public.json");
 
 const trust = await verifySignedAssetSet(path.join(projectRoot, "public"), rootConfigPath);
 
