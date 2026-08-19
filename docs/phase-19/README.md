@@ -1,8 +1,15 @@
 # Phase 19 — Préparation du déploiement de production
 
+## Exception de durcissement systemd
+
+L'unité de l'API opérateur lève `MemoryDenyWriteExecute` et rien d'autre : le
+JIT de V8 est incompatible avec cette directive et Node mourait au démarrage
+(`v8::internal::OS::SetPermissions`, `status=5/TRAP`). Motivation, options
+écartées et contrepartie exigée : [ADR-014](./adr-014-jit-hardening-exception.md).
+
 ## Statut
 
-Le gate et le runbook de production sont implémentés. Le prérequis Phase 18 est désormais `GO` par dérogation explicite du stakeholder. Aucun déploiement n’a toutefois été exécuté : le dossier Phase 19 fourni en exemple reste `NO_GO`, les origins finales ne sont pas configurées dans le workspace et les preuves propres au cutover de production ne sont pas liées à un dossier réel.
+Le gate et le runbook de production sont implémentés. Le prérequis Phase 18 est désormais `GO` par dérogation explicite du stakeholder. Une mise en service a depuis eu lieu : le dossier réel, ses preuves et la configuration d'infrastructure vivent **hors de ce dépôt**, qui est public. Le dossier fourni ici reste un exemple, et le dossier réel reste `NO_GO` tant que les preuves attendues ne sont pas collectées sur l'hôte.
 
 Cette phase ne transforme pas une attestation JSON en preuve réelle. Elle garantit que les artefacts, décisions, contrôles et responsabilités nécessaires sont complets et liés par hash avant qu’une action externe soit autorisée.
 
