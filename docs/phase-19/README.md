@@ -2,7 +2,7 @@
 
 ## Statut
 
-Le gate et le runbook de production sont implémentés. Le prérequis Phase 18 est désormais `GO` par dérogation explicite du stakeholder. Aucun déploiement n’a toutefois été exécuté : le dossier Phase 19 fourni en exemple reste `NO_GO`, les origins finales ne sont pas configurées dans le workspace et les preuves propres au cutover de production ne sont pas liées à un dossier réel.
+Le gate et le runbook de production sont implémentés. Le prérequis Phase 18 est désormais `GO` par dérogation explicite du stakeholder. L’origin publique a été mise en service le 17 août 2026, avant l’établissement d’un dossier réel ; l’origin opérateur ne sert que le portail statique, son API étant désactivée. Un dossier de production a été constitué après coup et produit `NO_GO` avec 14 écarts, détaillés dans [l’état de production](./production-status.md). Ce dossier et ses preuves sont conservés hors du dépôt. Le dossier fourni ici en exemple reste volontairement non admissible.
 
 Cette phase ne transforme pas une attestation JSON en preuve réelle. Elle garantit que les artefacts, décisions, contrôles et responsabilités nécessaires sont complets et liés par hash avant qu’une action externe soit autorisée.
 
